@@ -12,8 +12,8 @@
 *R.java
 
 # bin and gen folders
-bin.*
-gen.*
+bin/
+gen/
 
 # Eclipse specific files
 .project
