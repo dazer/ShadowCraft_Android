@@ -1,12 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:weightSum="1"
+  android:background="@drawable/smoket"
+  android:orientation="vertical"
+>
+  <ImageView
+    android:layout_width="wrap_content"
+    android:src="@drawable/logosplash"
+    android:layout_height="150px"
+    android:id="@+id/imageView1"
+    android:layout_gravity="top"
+  ></ImageView>
+  <TextView
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
+    android:text="Character Name"
+    android:layout_height="wrap_content"
+  ></TextView>
+  <EditText
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:id="@+id/editText2"
+    android:layout_marginLeft="20px"
+  ></EditText>
+  <TextView
+    android:layout_width="fill_parent"
+    android:text="Realm"
+    android:layout_height="wrap_content"
+  ></TextView>
+  <EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/editText1"
+    android:layout_marginLeft="20px"
+  ></EditText>
+  <TextView
+    android:layout_width="fill_parent"
+    android:text="Region"
+    android:layout_height="wrap_content"
+  ></TextView>
+  <RadioGroup
+    android:layout_width="fill_parent"
+    android:id="@+id/radioGroup1"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:baselineAligned="true"
+  >
+    <RadioButton
+      android:checked="true"
+      android:layout_height="wrap_content"
+      android:text="EU"
+      android:layout_width="wrap_content"
+      android:id="@+id/radio0" />
+    <RadioButton
+      android:layout_height="wrap_content"
+      android:text="US"
+      android:layout_width="wrap_content"
+      android:id="@+id/radio1" />
+    <RadioButton
+      android:layout_height="wrap_content"
+      android:text="TW"
+      android:layout_width="wrap_content"
+      android:id="@+id/radio2" />
+    <RadioButton
+      android:text="KR"
+      android:id="@+id/radio3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+    <RadioButton
+      android:text="CN"
+      android:id="@+id/radio4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+  </RadioGroup>
+  <Button
+    android:layout_width="fill_parent"
+    android:textStyle="bold"
+    android:textSize="20dp"
+    android:text="Start"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="30px"
+    android:layout_marginRight="30px"
+    android:layout_gravity="center_horizontal" />
+  <TextView
+    android:layout_width="fill_parent"
+    android:text="@string/bottom"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+  ></TextView>
+
 </LinearLayout>
