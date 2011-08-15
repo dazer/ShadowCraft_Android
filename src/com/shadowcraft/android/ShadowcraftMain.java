@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.view.Window;
 
 public class ShadowcraftMain extends Activity {
+
+    private String name;
+    private String realm;
+    private String region;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -12,4 +17,5 @@ public class ShadowcraftMain extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
     }
+
 }

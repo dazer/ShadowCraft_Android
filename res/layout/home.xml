@@ -22,7 +22,7 @@
       android:layout_height="wrap_content"
       android:layout_width="wrap_content"
       android:src="@drawable/azzi"
-      android:layout_marginLeft="30dp" />
+      android:layout_marginLeft="30dp"/>
     <ImageView
       android:id="@+id/imageView2"
       android:layout_height="wrap_content"

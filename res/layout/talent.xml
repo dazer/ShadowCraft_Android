@@ -12,7 +12,7 @@
     android:padding="0px"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:layout_alignParentLeft="true" />
+    android:layout_alignParentLeft="true"/>
   <ImageView
     android:src="@drawable/t_overglow"
     android:id="@+id/imageView2"
