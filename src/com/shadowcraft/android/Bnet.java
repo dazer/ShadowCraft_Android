@@ -9,6 +9,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 public class Bnet {
 
     public String getCached(String name, String realm, String region) {
@@ -35,10 +38,10 @@ public class Bnet {
     }
 
     /**
-     * From https://github.com/chalverson/wowjavaapi.git
-     * Returns the JSON from the supplied URL. This will always return some
-     * sort of JSON. If there is a URL connection error it will return a JSON
-     * string that is a error status.
+     * From https://github.com/chalverson/wowjavaapi.git Returns the JSON from
+     * the supplied URL. This will always return some sort of JSON. If there is
+     * a URL connection error it will return a JSON string that is a error
+     * status.
      * 
      * @param url to send request
      * @return String of the returned JSON
@@ -54,7 +57,7 @@ public class Bnet {
             StringBuilder sb = new StringBuilder();
             int responseCode = urlConnection.getResponseCode();
             // Read the correct stream based on the response code.
-            if((responseCode == 404) || (responseCode == 500)) {
+            if ((responseCode == 404) || (responseCode == 500)) {
                 InputStream input = urlConnection.getErrorStream();
                 reader = new BufferedReader(new InputStreamReader(input));
             }
@@ -66,10 +69,16 @@ public class Bnet {
                 sb.append(line).append('\n');
             }
             ret = sb.toString();
+            // just a stub: if we really want JSON we'll use this.
+            @SuppressWarnings("unused")
+            JSONArray jsonArray = new JSONArray(ret);
         }
         catch (IOException e1) {
             // Some sort of connection error; return a JSON too.
             ret = "{\"status\":\"nok\", \"reason\":\"URL Connection Error\"}";
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
         }
         finally {
             if (reader != null) {
@@ -80,8 +89,8 @@ public class Bnet {
                 }
             }
         }
+
         return ret;
     }
 
 }
-
