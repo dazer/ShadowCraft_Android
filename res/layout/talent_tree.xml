@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+android:background="@drawable/smoket">
+    <include layout="@layout/header" android:id="@+id/include2" android:layout_width="wrap_content" android:layout_height="wrap_content"></include>
+  <TableRow
+    android:layout_width="wrap_content"
+    android:id="@+id/tableRow1"
+    android:layout_height="wrap_content"
+  >
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include02"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include01"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+  </TableRow>
+  <TableRow
+    android:layout_width="wrap_content"
+    android:id="@+id/tableRow1"
+    android:layout_height="wrap_content"
+  >
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include02"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include01"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+  </TableRow>
+  <TableRow
+    android:layout_width="wrap_content"
+    android:id="@+id/tableRow1"
+    android:layout_height="wrap_content"
+  >
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include02"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include01"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+  </TableRow>
+  <TableRow
+    android:layout_width="wrap_content"
+    android:id="@+id/tableRow1"
+    android:layout_height="wrap_content"
+  >
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include02"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include01"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+  </TableRow>
+  <TableRow
+    android:layout_width="wrap_content"
+    android:id="@+id/tableRow1"
+    android:layout_height="wrap_content"
+  >
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include02"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include01"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+  </TableRow>
+  <TableRow
+    android:layout_width="wrap_content"
+    android:id="@+id/tableRow1"
+    android:layout_height="wrap_content"
+  >
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include02"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include01"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="3dp" />
+  </TableRow>
+
+
+</TableLayout>

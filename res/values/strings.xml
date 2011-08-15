@@ -11,4 +11,5 @@
     <string name="start_region_kr">KR</string>
     <string name="start_region_cn">CN</string>
     <string name="start_start_button">Start</string>
+    <color name="bg_color">#0a0a0a</color>
 </resources>
