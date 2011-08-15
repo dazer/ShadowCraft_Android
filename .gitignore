@@ -18,3 +18,5 @@ gen/
 # Eclipse specific files
 .project
 .classpath
+.metadata/
+.settings/
