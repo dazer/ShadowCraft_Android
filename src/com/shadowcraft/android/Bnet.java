@@ -9,17 +9,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 public class Bnet {
 
-    public String getCached(String name, String realm, String region) {
-
-        return null;
-    }
-
-    public String fetchChar(String name, String realm, String region) {
+    public static String fetchChar(String name, String realm, String region) {
         String host = "http://" + region.toLowerCase() + ".battle.net";
         String charApi = String.format("/api/wow/character/%s/%s", name, realm);
         String fields = "?fields=items,talents,professions,appearance";
@@ -69,16 +61,10 @@ public class Bnet {
                 sb.append(line).append('\n');
             }
             ret = sb.toString();
-            // just a stub: if we really want JSON we'll use this.
-            @SuppressWarnings("unused")
-            JSONArray jsonArray = new JSONArray(ret);
         }
         catch (IOException e1) {
             // Some sort of connection error; return a JSON too.
             ret = "{\"status\":\"nok\", \"reason\":\"URL Connection Error\"}";
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
         }
         finally {
             if (reader != null) {
