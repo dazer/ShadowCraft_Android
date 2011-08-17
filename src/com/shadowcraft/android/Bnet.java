@@ -13,20 +13,28 @@ public class Bnet {
 
     public static String fetchChar(String name, String realm, String region) {
         String host = "http://" + region.toLowerCase() + ".battle.net";
-        String charApi = String.format("/api/wow/character/%s/%s", name, realm);
-        String fields = "?fields=items,talents,professions,appearance";
+        String api = String.format("/api/wow/character/%s/%s", realm, name);
+        String fields = "?fields=items,talents,professions";
+        URI uri = mkURI(host + api + fields);
+        return getStringJSONFromRequest(uri.toString());
+    }
 
+    public static String fetchItem(String id) {
+        String host = "http://us.battle.net";
+        String api = String.format("/api/wow//item/%s", id);  // double slash
+        URI uri = mkURI(host + api);
+        return getStringJSONFromRequest(uri.toString());
+    }
+
+    public static URI mkURI(String uriString) {
         URI uri = null;
         try {
-            uri = new URI(host + charApi + fields);
+            uri = new URI(uriString);
         }
         catch (URISyntaxException e) {
             // throw warning here.
         }
-
-        String json = getStringJSONFromRequest(uri.toString());
-
-        return json;
+        return uri;
     }
 
     /**

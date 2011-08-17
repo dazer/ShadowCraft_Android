@@ -1,22 +1,55 @@
-This is the repository for the smartphone app version of the project ShadowCraft.
-ShadowCraft aims to develop a framework under which theorycrafting (primarily rogue focused) can happen.
-This is an independent offspring of the project hatched in ElitistJerks; however, the spirit of the project remains intact. For further information on the inner workings of the aforementioned program reffer to ShadowCraft-Engine and ShadowCraftUI here on GitHub.
+This is the repository for the smartphone app version of the project
+ShadowCraft.
+ShadowCraft aims to develop a framework under which theorycrafting (primarily
+rogue focused) can happen.
+This is an independent offspring of the project hatched in ElitistJerks;
+however, the spirit of the project remains intact. For further information on
+the inner workings of the aforementioned program refer to ShadowCraft-Engine
+and ShadowCraftUI here on GitHub.
 
 As a general rule, we are using these conventions:
--CamelCase for classes, lowercase_and_underscore for methods and variables, UPPERCASE for static variables.
--Simpleton getters share the name with the variable they point to; simpleton setters are of the form set_variable_name. General use getters/setters are get(name) and set(name, value): we don't want callers that look like this.talents.get_talent("talent_name"); instead use this.talents.get("talent_name")
+-CamelCase for classes, lowercase_and_underscore (in the engine) or
+lowercaseAndCamelCase (in the front-end) for methods and variables ,
+UPPERCASE for static variables.
+-Simpleton getters share the name with the variable they point to; simpleton
+setters are of the form set_variable_name. General use getters/setters are
+get(name) and set(name, value): we don't want callers that look like
+this.talents.get_talent("talent_name"); instead try to use
+this.talents.get("talent_name")
 -Indents are four spaces with no tabs (two spaces in xml files).
--Curly brackets start in the same line but end in new line: butterfly '}else{' clauses is a no no; only exception is declaration of arrays in a single line or static classes (the double curly bracket format). You can omit them in single line if/else, but not in loops (for, while, try, etc).
--Use enhanced for-loops. If you need to loop over a hash, don't forget you can loop over the entryset if you need both the key and the value.
--Use generics whenever possible; when declaring a variable or a parameter use the father classes (Map instead of HashMap). Avoid casting like the plage.
--Try to keep lines short, but don't go out of the way in doing so. Don't break lines, unless it favors readability: different statements in if clauses is ok, and so is aritmetic operators; splitting a caller is not.
--Inline commets start two spaces after the line.
+-Curly brackets start in the same line but end in new line: butterfly
+'}else{' clauses is a no no; only exception is declaration of arrays in a
+single line or static classes (the double curly bracket format). You can omit
+them in one-liners if/else, but not in loops (for, while, try, etc).
+-Use enhanced for-loops. If you need to loop over a hash, don't forget you
+can loop over the entryset if you need both the key and the value.
+-Use generics whenever possible; when declaring a variable or a parameter use
+the father classes (Map instead of HashMap). Avoid casting like the plage.
+-Try to keep lines short, but don't go out of the way in doing so. Don't
+break lines, unless it favors readability: different statements in if clauses
+is ok, and so is arithmetic operators; splitting a caller is not.
+-In-line comments start two spaces after the line.
 -Keep the new lines at the end of files.
 -Don't let your IDE format your code unless you know what will it do.
-We are using Eclipse to develop this work, but we will try to keep the repo clean so other developers can port it safely to other platforms or IDEs. If you want to cooperate, and want to use Eclipse too, feel free to ask for the config files so we keep the format as consitent as possible.
+We are using Eclipse to develop this work, but we will try to keep the repo
+clean so other developers can port it safely to other platforms or IDEs. If
+you want to cooperate, and want to use Eclipse too, feel free to ask for the
+config files so we keep the format as consistent as possible.
 
-A note on the license: the original Pythonic engine is released under the 'Version 3 of the GNU Lesser General Public License'; this composite work, however, will be released under the 'version 3 of the GNU General Public License' for starters (I may change it to the Apache 2.0 later on).
-The copyright holder of the former engine is Aldriana; this work will embed a rewriten version of that engine which, as much as it is a 'modified work' of the source, it's a complete rework of the whole thing: the only resemblance it holds against the former engine is the lessons I learnt during its development. Having that in mind, I, dazer, will consider myself as the holder of the copyright for that engine, so I can release it under the GNU General Public License.
-In a nutshell, what this means is: everyone can use the pythonic engine; but the java engine (and the rest of the app for that matter) is restricted to free software developers only. If Aldriana, or anyone else, feels I should release that package under the lesser license you are more than welcomed to request it and we'll see what can be done.
+A note on the license: the original Pythonic engine is released under the
+'Version 3 of the GNU Lesser General Public License'; this composite work,
+however, will be released under the 'version 3 of the GNU General Public
+License' for starters (I may change it to the Apache 2.0 later on).
+The copyright holder of the former engine is Aldriana; this work will embed a
+rewritten version of that engine which, as much as it may be a 'modified
+work' of the source, it's a complete rework of the whole thing. Having that
+in mind, I, dazer, will consider myself as the holder of the copyright for
+this engine, so I can release it under the GNU General Public License.
+In a nutshell, what this means is: everyone can use the pythonic engine; but
+the java engine (and the rest of the app for that matter) is restricted to
+free software developers only. If Aldriana wants to press copyright ownership
+over the java engine, or anyone else feels I should release that package
+under the lesser license you are more than welcomed to request it, and we'll
+see what should be done.
 
 Developers: moscovich & dazer

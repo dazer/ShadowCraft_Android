@@ -4,8 +4,13 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-android:background="@drawable/smoket">
-    <include layout="@layout/header" android:id="@+id/include2" android:layout_width="wrap_content" android:layout_height="wrap_content"></include>
+  android:background="@drawable/smoket"
+>
+  <include
+    layout="@layout/header"
+    android:id="@+id/include2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
   <TableRow
     android:layout_width="wrap_content"
     android:id="@+id/tableRow1"
@@ -14,27 +19,31 @@ android:background="@drawable/smoket">
     <include
       layout="@layout/talent"
       android:id="@+id/include03"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_width="0dp"
+      android:layout_weight="1" />
     <include
       layout="@layout/talent"
       android:id="@+id/include02"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_width="0dp"
+      android:layout_weight="1" />
     <include
       layout="@layout/talent"
       android:id="@+id/include01"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_width="0dp"
+      android:layout_weight="1" />
     <include
       layout="@layout/talent"
       android:id="@+id/include1"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_width="0dp"
+      android:layout_weight="1" />
   </TableRow>
   <TableRow
     android:layout_width="wrap_content"
@@ -44,27 +53,31 @@ android:background="@drawable/smoket">
     <include
       layout="@layout/talent"
       android:id="@+id/include03"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include02"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include01"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include1"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
   </TableRow>
   <TableRow
     android:layout_width="wrap_content"
@@ -74,27 +87,31 @@ android:background="@drawable/smoket">
     <include
       layout="@layout/talent"
       android:id="@+id/include03"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include02"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include01"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include1"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
   </TableRow>
   <TableRow
     android:layout_width="wrap_content"
@@ -104,27 +121,31 @@ android:background="@drawable/smoket">
     <include
       layout="@layout/talent"
       android:id="@+id/include03"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include02"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include01"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include1"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
   </TableRow>
   <TableRow
     android:layout_width="wrap_content"
@@ -134,27 +155,31 @@ android:background="@drawable/smoket">
     <include
       layout="@layout/talent"
       android:id="@+id/include03"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include02"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include01"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include1"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
   </TableRow>
   <TableRow
     android:layout_width="wrap_content"
@@ -164,27 +189,31 @@ android:background="@drawable/smoket">
     <include
       layout="@layout/talent"
       android:id="@+id/include03"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include02"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include01"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
     <include
       layout="@layout/talent"
       android:id="@+id/include1"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="3dp" />
+      android:layout_margin="3dp"
+      android:layout_weight="1"
+      android:layout_width="0dp" />
   </TableRow>
 
 
