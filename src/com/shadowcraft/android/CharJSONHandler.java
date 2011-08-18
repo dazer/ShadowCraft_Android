@@ -1,5 +1,6 @@
 package com.shadowcraft.android;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,80 @@ public class CharJSONHandler {
         put("druid",        new String[] {"balance", "feral_combat", "restoration"});
     }};
 
+    @SuppressWarnings("serial")
+    private static Map<Integer, String> buffMap = new HashMap<Integer, String>(){{
+        put( 1, "short_term_haste_buff");           // BL
+        put( 2, "str_and_agi_buff");                // SoE
+        put( 3, "");                                // armor
+        put( 4, "attack_power_buff");               // BoM
+        put( 5, "crit_chance_buff");                // LotP
+        put( 6, "all_damage_buff");                 // ArcTac
+        put( 7, "");                                // ArcInt
+        put( 8, "");                                // CasterBoM
+        put( 9, "melee_haste_buff");                // WFury
+        put(10, "");                                // DmgReduction
+        put(11, "");                                // PushbackProtection
+        put(12, "");                                // SpellHaste
+        put(13, "");                                // SpellPower
+        put(14, "");                                // Stamina
+        put(15, "stat_multiplier_buff");            // BoK
+        put(20, "armor_debuff");                    // Sunder
+        put(21, "");                                // AttackSpeedSlow
+        put(22, "bleed_damage_debuff");             // Mangle
+        put(23, "");                                // CastSpeedSlow
+        put(24, "");                                // MortalStrike
+        put(25, "");                                // DemoShout
+        put(26, "physical_vulnerability_debuff");   // Savage Combat
+        put(27, "spell_crit_debuff");               // CritMass
+        put(28, "spell_damage_debuff");             // CoE
+        put(30, "guild_feast");                     // Food
+        put(31, "agi_flask");                       // Flask
+        put(40, "");                                // Replenishment
+        put(41, "");                                // Spell resist
+    }};
+
+    @SuppressWarnings("serial")
+    private static Map<Integer, String> glyphMap = new HashMap<Integer, String>(){{
+        put(45766, "Fan of Knives");
+        put(45767, "Tricks of the Trade");
+        put(45761, "Vendetta");
+        put(45762, "Killing Spree");
+        put(45764, "Shadow Dance");
+        put(42971, "Kick");
+        put(42959, "Deadly Throw");
+        put(45769, "Cloak of Shadows");
+        put(42954, "Adrenaline Rush");
+        put(42968, "Preparation");
+        put(43378, "Safe Fall");
+        put(42969, "Rupture");
+        put(42963, "Feint");
+        put(42964, "Garrote");
+        put(42962, "Expose Armor");
+        put(64493, "Blind");
+        put(42965, "Revealing Strike");
+        put(42967, "Hemorrhage");
+        put(43376, "Distract");
+        put(42955, "Ambush");
+        put(42956, "Backstab");
+        put(42957, "Blade Flurry");
+        put(42958, "Crippling Poison");
+        put(42960, "Evasion");
+        put(42961, "Eviscerate");
+        put(42966, "Gouge");
+        put(42970, "Sap");
+        put(42972, "Sinister Strike");
+        put(42973, "Slice and Dice");
+        put(42974, "Sprint");
+        put(43343, "Pick Pocket");
+        put(43377, "Pick Lock");
+        put(43379, "Blurred Speed");
+        put(43380, "Poisons");
+        put(45768, "Mutilate");
+        put(63420, "Vanish");
+    }};
+
+
+
     private JSONObject charJSON;  // We could extract its values to fields.
 
     public CharJSONHandler (String name, String realm, String region) {
@@ -102,23 +177,30 @@ public class CharJSONHandler {
             json = mkJSON(JSONString);
             // TODO catch nok errors
             json = cleanCharJSON(json);
+            json = rogueDefault(json);
         }
 
         return json;
     }
 
-    private JSONObject cleanCharJSON(JSONObject json) {
+    public JSONObject rogueDefault(JSONObject json) {
+        int[] defBuffs = {1, 2, 4, 5, 6, 9, 15, 20, 22, 26, 27, 28, 30, 31};
+        try {
+            json.put("buffs", defBuffs);
+        }
+        catch (JSONException ignore) {}
+        return json;
+    }
+
+    public JSONObject cleanCharJSON(JSONObject json) {
         json.remove("lastModified");
         json.remove("gender");
         json.remove("achievementPoints");
-        json.remove("thumbnail");  // catch and use?
+        // json.remove("thumbnail");  // catch and use?
         // json.remove("name");
         // json.remove("realm");
 
         try {
-            json.put("race", raceMap.get(json.getInt("race")));
-            json.put("class", classMap.get(json.getInt("class")));
-
             // this places nulls if no profession is retrieved.
             JSONObject profs =  json.getJSONObject("professions");
             JSONArray primProfs = profs.getJSONArray("primary");
@@ -149,7 +231,7 @@ public class CharJSONHandler {
                     JSONArray glyphs = allGlyphs.getJSONArray(s);
                     for (int j=0; j<glyphs.length(); j++) {
                         JSONObject glyph = glyphs.getJSONObject(j);
-                        int a = glyph.getInt("glyph");
+                        int a = glyph.getInt("item");
                         glyphsIds.add(a);
                     }
                 }
@@ -213,6 +295,8 @@ public class CharJSONHandler {
         return json;
     }
 
+    // general getters
+
     public Object get(String name) {
         try {
             return this.charJSON.get(name);
@@ -237,12 +321,30 @@ public class CharJSONHandler {
         return 0;
     }
 
+    public String[] getArray(String name) {
+        JSONArray a = (JSONArray) this.get(name);
+        List<String> l = new ArrayList<String>();
+        for (int i = 0; i<a.length(); i++) {
+            try {
+                l.add(a.getString(i));
+            }
+            catch (JSONException ignore) {}
+        }
+        return l.toArray(new String[]{});
+    }
+
+    // particular getters
+
     public String gameClass() {
-        return this.getString("class");
+        return classMap.get(this.getInt("class"));
+    }
+
+    public boolean isClass(String gameClass) {
+        return gameClass().equals(gameClass);
     }
 
     public String race() {
-        return this.getString("race");
+        return raceMap.get(this.getInt("race"));
     }
 
     public int level() {
@@ -297,12 +399,37 @@ public class CharJSONHandler {
         return specced().equals(spec);
     }
 
+    public Integer[] glyphsIDs() {
+        JSONArray glyphs = (JSONArray) this.get("glyphs");
+        List<Integer> l = new ArrayList<Integer>();
+        for (int i = 0; i<glyphs.length(); i++) {
+            try {
+                l.add(glyphs.getInt(i));
+            }
+            catch (JSONException ignore) {}
+        }
+        return l.toArray(new Integer[]{});
+    }
+
     public String[] glyphs() {
+        // this places nulls if the glyph is not mapped.
         JSONArray glyphs = (JSONArray) this.get("glyphs");
         List<String> l = new ArrayList<String>();
         for (int i = 0; i<glyphs.length(); i++) {
             try {
-                l.add(glyphs.getString(i));
+                l.add(glyphMap.get(glyphs.getInt(i)));
+            }
+            catch (JSONException ignore) {}
+        }
+        return l.toArray(new String[]{});
+    }
+
+    public String[] buffs() {
+        JSONArray buffs = (JSONArray) this.get("buffs");
+        List<String> l = new ArrayList<String>();
+        for (int i = 0; i<buffs.length(); i++) {
+            try {
+                l.add(buffMap.get(buffs.getInt(i)));
             }
             catch (JSONException ignore) {}
         }

@@ -34,7 +34,7 @@ public class GearBuffs {
      * Constructor. Caches the strings passed into present_g_buffs.
      * @param args
      */
-    public GearBuffs(HashSet<String> args) {
+    public GearBuffs(Set<String> args) {
         for (String arg : args) {
             set_buff(arg);
         }

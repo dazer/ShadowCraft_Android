@@ -28,6 +28,12 @@ public class ProcsList {
         }
     }
 
+    public ProcsList(Set<String> args) {
+        for (String proc : args) {
+            this.append_proc(proc);
+        }
+    }
+
     public HashMap<String, ?> get_proc_data(String arg) throws InvalidProcException {
         if (!allowed_procs().contains(arg))
             throw new InvalidProcException(String.format("No data available for proc %s", arg));
