@@ -2,6 +2,7 @@ package com.shadowcraft.android;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,155 +11,33 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import calcs.DamageCalculator;
+
 public class CharJSONHandler {
-
-    @SuppressWarnings("serial")
-    private static Map<Integer, String> raceMap = new HashMap<Integer, String>(){{
-        put( 1, "human");
-        put( 2, "orc");
-        put( 3, "dwarf");
-        put( 4, "night_elf");
-        put( 5, "undead");
-        put( 6, "tauren");
-        put( 7, "gnome");
-        put( 8, "troll");
-        put( 9, "goblin");
-        put(10, "blood_elf");
-        put(11, "draenei");
-        put(22, "worgen");
-    }};
-
-    @SuppressWarnings("serial")
-    private static Map<Integer, String> classMap = new HashMap<Integer, String>(){{
-        put( 1, "warrior");
-        put( 2, "paladin");
-        put( 3, "hunter");
-        put( 4, "rogue");
-        put( 5, "priest");
-        put( 6, "death_knight");
-        put( 7, "shaman");
-        put( 8, "mage");
-        put( 9, "warlock");
-        put(11, "druid");
-    }};
-
-    @SuppressWarnings("serial")
-    private static Map<String, Integer> itemMap = new HashMap<String, Integer>(){{
-        put("head",     0);
-        put("neck",     1);
-        put("shoulder", 2);
-        put("back",     14);
-        put("chest",    4);
-        put("wrist",    8);
-        put("hands",    9);
-        put("waist",    5);
-        put("legs",     6);
-        put("feet",     7);
-        put("finger1",  10);
-        put("finger2",  11);
-        put("trinket1", 12);
-        put("trinket2", 13);
-        put("mainHand", 15);
-        put("offHand",  16);
-        put("ranged",   17);
-    }};
-
-    @SuppressWarnings("serial")
-    private static Map<String, String[]> specMap = new HashMap<String, String[]>(){{
-        put("warrior",      new String[] {"arms", "fury", "protection"});
-        put("paladin",      new String[] {"holy", "protection", "retribution"});
-        put("hunter",       new String[] {"beast_mastery", "marksmanship", "survival"});
-        put("rogue",        new String[] {"assassination", "combat", "subtlety"});
-        put("priest",       new String[] {"discipline", "holy", "shadow"});
-        put("death_knight", new String[] {"blood", "frost", "unholy"});
-        put("shaman",       new String[] {"elemental", "enhancement", "restoration"});
-        put("mage",         new String[] {"arcane", "fire", "frost"});
-        put("warlock",      new String[] {"affliction", "demonology", "destruction"});
-        put("druid",        new String[] {"balance", "feral_combat", "restoration"});
-    }};
-
-    @SuppressWarnings("serial")
-    private static Map<Integer, String> buffMap = new HashMap<Integer, String>(){{
-        put( 1, "short_term_haste_buff");           // BL
-        put( 2, "str_and_agi_buff");                // SoE
-        put( 3, "");                                // armor
-        put( 4, "attack_power_buff");               // BoM
-        put( 5, "crit_chance_buff");                // LotP
-        put( 6, "all_damage_buff");                 // ArcTac
-        put( 7, "");                                // ArcInt
-        put( 8, "");                                // CasterBoM
-        put( 9, "melee_haste_buff");                // WFury
-        put(10, "");                                // DmgReduction
-        put(11, "");                                // PushbackProtection
-        put(12, "");                                // SpellHaste
-        put(13, "");                                // SpellPower
-        put(14, "");                                // Stamina
-        put(15, "stat_multiplier_buff");            // BoK
-        put(20, "armor_debuff");                    // Sunder
-        put(21, "");                                // AttackSpeedSlow
-        put(22, "bleed_damage_debuff");             // Mangle
-        put(23, "");                                // CastSpeedSlow
-        put(24, "");                                // MortalStrike
-        put(25, "");                                // DemoShout
-        put(26, "physical_vulnerability_debuff");   // Savage Combat
-        put(27, "spell_crit_debuff");               // CritMass
-        put(28, "spell_damage_debuff");             // CoE
-        put(30, "guild_feast");                     // Food
-        put(31, "agi_flask");                       // Flask
-        put(40, "");                                // Replenishment
-        put(41, "");                                // Spell resist
-    }};
-
-    @SuppressWarnings("serial")
-    private static Map<Integer, String> glyphMap = new HashMap<Integer, String>(){{
-        put(45766, "Fan of Knives");
-        put(45767, "Tricks of the Trade");
-        put(45761, "Vendetta");
-        put(45762, "Killing Spree");
-        put(45764, "Shadow Dance");
-        put(42971, "Kick");
-        put(42959, "Deadly Throw");
-        put(45769, "Cloak of Shadows");
-        put(42954, "Adrenaline Rush");
-        put(42968, "Preparation");
-        put(43378, "Safe Fall");
-        put(42969, "Rupture");
-        put(42963, "Feint");
-        put(42964, "Garrote");
-        put(42962, "Expose Armor");
-        put(64493, "Blind");
-        put(42965, "Revealing Strike");
-        put(42967, "Hemorrhage");
-        put(43376, "Distract");
-        put(42955, "Ambush");
-        put(42956, "Backstab");
-        put(42957, "Blade Flurry");
-        put(42958, "Crippling Poison");
-        put(42960, "Evasion");
-        put(42961, "Eviscerate");
-        put(42966, "Gouge");
-        put(42970, "Sap");
-        put(42972, "Sinister Strike");
-        put(42973, "Slice and Dice");
-        put(42974, "Sprint");
-        put(43343, "Pick Pocket");
-        put(43377, "Pick Lock");
-        put(43379, "Blurred Speed");
-        put(43380, "Poisons");
-        put(45768, "Mutilate");
-        put(63420, "Vanish");
-    }};
-
-
 
     private JSONObject charJSON;  // We could extract its values to fields.
 
     public CharJSONHandler (String name, String realm, String region) {
         this.charJSON = fetchChar(name, realm, region);
+        cleanCharJSON();
+        setDefault();
     }
 
     public CharJSONHandler (String json) {
         this.charJSON = mkJSON(json);
+    }
+
+    /**
+     * Calls the appropriate back-end based on class
+     * @return a DamageCalculator object to retrieve data from.
+     */
+    public DamageCalculator buildModeler() {
+        DamageCalculator calculator = null;
+        if (this.isClass("rogue"))
+            calculator = RogueBackend.build(this);
+        else if (this.isClass(""))
+            ;
+        return calculator;
     }
 
     @Override
@@ -176,33 +55,76 @@ public class CharJSONHandler {
             String JSONString = Bnet.fetchChar(name, realm, region);
             json = mkJSON(JSONString);
             // TODO catch nok errors
-            json = cleanCharJSON(json);
-            json = rogueDefault(json);
         }
 
         return json;
     }
 
-    public JSONObject rogueDefault(JSONObject json) {
-        int[] defBuffs = {1, 2, 4, 5, 6, 9, 15, 20, 22, 26, 27, 28, 30, 31};
+    public void setDefault() {
+        if (this.isClass("rogue"))
+            rogueDefault();
+        else if (this.isClass(""))
+            ;
+    }
+
+    public void rogueDefault() {
+        int[] buffs = {1, 2, 4, 5, 6, 9, 15, 20, 22, 26, 27, 28, 30, 31};
+        JSONObject assassination = new JSONObject();
+        JSONObject combat = new JSONObject();
+        JSONObject subtlety = new JSONObject();
+        JSONObject cycleSettings = new JSONObject();
+        JSONObject fightSettings = new JSONObject();
         try {
-            json.put("buffs", defBuffs);
+            assassination.put("min_envenom_size_mutilate", 4);
+            assassination.put("min_envenom_size_backstab", 5);
+            assassination.put("prioritize_rupture_uptime_mutilate", true);
+            assassination.put("prioritize_rupture_uptime_backstab", true);
+            cycleSettings.put("assassination", assassination);
+
+            combat.put("use_rupture", true);
+            combat.put("use_revealing_strike", "sometimes");
+            combat.put("ksp_immediately", false);
+            cycleSettings.put("combat", combat);
+
+            subtlety.put("raid_crits_per_second", 5);
+            subtlety.put("clip_recuperate", false);
+            subtlety.put("use_hemorrhage", "never");
+            subtlety.put("hemo_interval", 24);
+            cycleSettings.put("subtlety", subtlety);
+
+            fightSettings.put("time_in_execute_range", .35);
+            fightSettings.put("tricks_on_cooldown", true);
+            fightSettings.put("mh_poison", "ip");
+            fightSettings.put("oh_poison", "dp");
+            fightSettings.put("duration", 300);
+            fightSettings.put("response_time", .5);
+            fightSettings.put("pre_pot", false);
+            fightSettings.put("combat_pot", true);
+
+            charJSON.put("buffs", buffs);
+            charJSON.put("cycleSettings", cycleSettings);
+            charJSON.put("fightSettings", fightSettings);
         }
         catch (JSONException ignore) {}
-        return json;
     }
 
-    public JSONObject cleanCharJSON(JSONObject json) {
-        json.remove("lastModified");
-        json.remove("gender");
-        json.remove("achievementPoints");
+    /**
+     * Removes unused fields and reformats talents, glyphs and professions. It
+     * will discard the non-active spec (talents and glyphs) in the current
+     * implementation; if we want to have those (for cached specs) there's some
+     * code stubs to do so.
+     */
+    public void cleanCharJSON() {
+        charJSON.remove("lastModified");
+        charJSON.remove("gender");
+        charJSON.remove("achievementPoints");
         // json.remove("thumbnail");  // catch and use?
         // json.remove("name");
         // json.remove("realm");
 
         try {
             // this places nulls if no profession is retrieved.
-            JSONObject profs =  json.getJSONObject("professions");
+            JSONObject profs =  charJSON.getJSONObject("professions");
             JSONArray primProfs = profs.getJSONArray("primary");
             String [] profsStrings = new String[2];
             for (int i = 0; i<primProfs.length(); i++) {
@@ -210,10 +132,10 @@ public class CharJSONHandler {
                 String profString = prof.getString("name");
                 profsStrings[i] = profString.toLowerCase();
             }
-            json.put("professions", profsStrings);
+            charJSON.put("professions", profsStrings);
 
             // glyphs and talents come in the same field.
-            JSONArray talents = json.getJSONArray("talents");
+            JSONArray talents = charJSON.getJSONArray("talents");
             for (int i = 0; i<2; i++) {
                 JSONObject build = (JSONObject) talents.get(i);
                 boolean active = false;
@@ -227,7 +149,7 @@ public class CharJSONHandler {
 
                 JSONObject allGlyphs = build.getJSONObject("glyphs");
                 List<Integer> glyphsIds = new ArrayList<Integer>();
-                for (String s : new String[] {"prime","minor","major"}) {
+                for (String s : new String[] {"prime", "minor", "major"}) {
                     JSONArray glyphs = allGlyphs.getJSONArray(s);
                     for (int j=0; j<glyphs.length(); j++) {
                         JSONObject glyph = glyphs.getJSONObject(j);
@@ -246,17 +168,19 @@ public class CharJSONHandler {
 
                 // json.put("fetchedGLyphs_" + (i + 1), glyphsIds);
                 // json.put("fetchedTalents_" + (i + 1), talentStrings);
-                json.put("glyphs", glyphsIds);
-                json.put("talents", talentStrings);
+                charJSON.put("glyphs", glyphsIds);
+                charJSON.put("talents", talentStrings);
             }
 
-            JSONObject items = json.getJSONObject("items");
+            // TODO need to better format this field; consider caching items from
+            // the database.
+            JSONObject items = charJSON.getJSONObject("items");
             items.remove("averageItemLevel");
             items.remove("averageItemLevelEquipped");
             items.remove("tabard");
             items.remove("shirt");
 
-            for (String slot : itemMap.keySet()) {
+            for (String slot : Data.itemMap.keySet()) {
                 JSONObject item = null;
                 try {
                     item = items.getJSONObject(slot);
@@ -275,15 +199,26 @@ public class CharJSONHandler {
         catch (JSONException ignore) {
             ignore.printStackTrace();
         }
-
-        return json;
     }
 
+    /**
+     * This should, somehow, check for cached chars (outside the app). We're
+     * returning null if no cache is found (all cases for now)
+     * @param name
+     * @param realm
+     * @param region
+     * @return
+     */
     public JSONObject getCached(String name, String realm, String region) {
         // define a way to retrieve cached characters.
         return null;
     }
 
+    /**
+     * Utility method to construct a JSON from a string.
+     * @param jsonString The string to be converted.
+     * @return A JSONObject for the string.
+     */
     public JSONObject mkJSON(String jsonString) {
         JSONObject json = null;
         try {
@@ -297,30 +232,53 @@ public class CharJSONHandler {
 
     // general getters
 
+    /**
+     * General object getter. It returns null to emulate the Hash behavior.
+     * @param name The field to retrieve
+     * @return The value or null if no value found.
+     */
     public Object get(String name) {
         try {
             return this.charJSON.get(name);
         }
-        catch (JSONException ignore) {}
-        return null;
+        catch (JSONException e) {
+            return null;
+        }
     }
 
+    /**
+     * General string getter. It returns null to emulate the Hash behavior.
+     * @param name The field to retrieve
+     * @return The string or null if no string found.
+     */
     public String getString(String name) {
         try {
             return this.charJSON.getString(name);
         }
-        catch (JSONException ignore) {}
-        return null;
+        catch (JSONException e) {
+            return null;
+        }
     }
 
+    /**
+     * General integer getter.
+     * @param name The field to retrieve
+     * @return The integer or 0 if no integer found.
+     */
     public int getInt(String name) {
         try {
             return this.charJSON.getInt(name);
         }
-        catch (JSONException ignore) {}
-        return 0;
+        catch (JSONException e) {
+            return 0;
+        }
     }
 
+    /**
+     * General string array getter.
+     * @param name The field to retrieve
+     * @return An array with strings.
+     */
     public String[] getArray(String name) {
         JSONArray a = (JSONArray) this.get(name);
         List<String> l = new ArrayList<String>();
@@ -335,22 +293,52 @@ public class CharJSONHandler {
 
     // particular getters
 
+    /**
+     * Maps the integer value of the class to its string value.
+     * @return The string for one of the classes.
+     */
     public String gameClass() {
-        return classMap.get(this.getInt("class"));
+        return Data.classMap.get(this.getInt("class"));
     }
 
+    /**
+     * Checks if the char is the queried class.
+     * @param gameClass class to query
+     * @return True if match, false otherwise.
+     */
     public boolean isClass(String gameClass) {
         return gameClass().equals(gameClass);
     }
 
+    /**
+     * Maps the integer value of the race to its string value.
+     * @return The string for one of the races.
+     */
     public String race() {
-        return raceMap.get(this.getInt("race"));
+        return Data.raceMap.get(this.getInt("race"));
     }
 
+    /**
+     * Finds the level in the JSON.
+     * @return the level of the char.
+     */
     public int level() {
         return this.getInt("level");
     }
 
+    /**
+     * Finds the professions in the JSON
+     * @return A list with the two primary professions; contains nulls for every
+     * profession that is not present.
+     */
+    public List<String> professions() {
+        return Arrays.asList(this.getArray("professions"));
+    }
+
+    /**
+     * Finds the talents in the JSON
+     * @return the 3 strings for the talents
+     */
     public String[] talents() {
         JSONArray stringsFromJSON;
         String[] strings = new String[3];
@@ -364,6 +352,10 @@ public class CharJSONHandler {
         return strings;
     }
 
+    /**
+     * Sums talents in every tree to return the spec in 31/2/8 format.
+     * @return An integer array of three elements to convey the spec.
+     */
     public Integer[] sumTalents() {
         String[] strings = talents();
         Integer[] spent = new Integer[3];
@@ -377,6 +369,11 @@ public class CharJSONHandler {
         return spent;
     }
 
+    /**
+     * Sums talents to get the spec in which most talents are spent. Then maps
+     * the result to an actual spec string.
+     * @return The string of the spec (for instance "assassination")
+     */
     public String specced() {
         Integer[] spent = sumTalents();
         int totalSpent = spent[0] + spent[1] + spent[2];
@@ -391,55 +388,176 @@ public class CharJSONHandler {
         if (maxSpent < 31 && totalSpent != maxSpent)
             return null;
         if (totalSpent <= 41 && totalSpent > 0)
-            return specMap.get(gameClass())[maxSpec];
+            return Data.specMap.get(gameClass())[maxSpec];
         return null;
     }
 
+    /**
+     * Checks if the char is the queried spec.
+     * @param spec The spec to query
+     * @return True if match, false otherwise
+     */
     public Boolean isSpecced(String spec) {
         return specced().equals(spec);
     }
 
+    /**
+     * Finds the glyphs in the JSON and returns them in ID format.
+     * @return An array of integers (not ordered)
+     */
     public Integer[] glyphsIDs() {
         JSONArray glyphs = (JSONArray) this.get("glyphs");
         List<Integer> l = new ArrayList<Integer>();
-        for (int i = 0; i<glyphs.length(); i++) {
-            try {
+        try {
+            for (int i = 0; i<glyphs.length(); i++) {
                 l.add(glyphs.getInt(i));
             }
-            catch (JSONException ignore) {}
         }
+        catch (JSONException ignore) {}
         return l.toArray(new Integer[]{});
     }
 
+    /**
+     * Maps the glyphs to their string values (those used by the engine). If no
+     * map is found it will return the ID with preceding underscore.
+     * @return An array of Strings (not ordered)
+     */
     public String[] glyphs() {
-        // this places nulls if the glyph is not mapped.
+        // this places _id if the glyph is not mapped.
         JSONArray glyphs = (JSONArray) this.get("glyphs");
         List<String> l = new ArrayList<String>();
-        for (int i = 0; i<glyphs.length(); i++) {
-            try {
-                l.add(glyphMap.get(glyphs.getInt(i)));
+        try {
+            int gameClass = charJSON.getInt("class");
+            Map<Integer, String> glyphMap = Data.glyphMapByClass.get(gameClass);
+            for (int i = 0; i<glyphs.length(); i++) {
+                int glyphID = glyphs.getInt(i);
+                String glyphString = glyphMap.get(glyphID);
+                l.add((glyphString != null) ? glyphString : "_" + glyphID);
             }
-            catch (JSONException ignore) {}
         }
+        catch (JSONException ignore) {}
         return l.toArray(new String[]{});
     }
 
+    /**
+     * Maps the buffs to their string values (those used by the engine). See that
+     * some buffs map to an empty String since the engine does not support those
+     * yet.
+     * @return An Array of Strings.
+     */
     public String[] buffs() {
         JSONArray buffs = (JSONArray) this.get("buffs");
         List<String> l = new ArrayList<String>();
         for (int i = 0; i<buffs.length(); i++) {
             try {
-                l.add(buffMap.get(buffs.getInt(i)));
+                l.add(Data.buffMap.get(buffs.getInt(i)));
             }
             catch (JSONException ignore) {}
         }
         return l.toArray(new String[]{});
     }
 
+    /**
+     * Finds in the JSON one fight setting and returns a value for it.
+     * @param setting The string for the queried setting.
+     * @return the value for the queried setting.
+     */
+    public Object fightSettings(String setting) {
+        try {
+            JSONObject settings = (JSONObject) charJSON.get("fightSettings");
+            return settings.get(setting);
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Finds in the JSON various fight settings.
+     * @param args The strings for the queried settings.
+     * @return A hash with all the settings requested.
+     */
+    public Map<String, Object> fightSettings(String... args) {
+        Map<String, Object> settingsMap = new HashMap<String, Object>();
+        JSONObject settings = null;
+        try {
+            settings = (JSONObject) charJSON.get("fightSettings");
+        }
+        catch (JSONException e) {
+            return null;
+        }
+        for (String key : args) {
+            try {
+                //                if (key.equals("duration") || key.equals("response_time"))
+                //                    settingsMap.put(key, settings.get(key));
+                settingsMap.put(key, settings.get(key));
+            }
+            catch (JSONException e) {
+                settingsMap.put(key, null);
+            }
+        }
+        return settingsMap;
+    }
+
+    /**
+     * Finds in the JSON all the fight settings.
+     * @return A hash with all the settings.
+     */
+    public Map<String, Object> fightSettings() {
+        Map<String, Object> settingsMap = new HashMap<String, Object>();
+        try {
+            JSONObject settings = (JSONObject) charJSON.get("fightSettings");
+            String[] keys = JSONObject.getNames(settings);
+            for (String key : keys) {
+                settingsMap.put(key, settings.get(key));
+            }
+        }
+        catch (JSONException ignore) {}
+        return settingsMap;
+    }
+
+    /**
+     * Finds in the JSON one cycle setting and returns a value for it. It will
+     * only search in the current spec sub field.
+     * @param setting The string for the queried setting.
+     * @return the value for the queried setting.
+     */
+    public Object cycleSettings(String setting) {
+        try {
+            JSONObject settings = (JSONObject) charJSON.get("cycleSettings");
+            JSONObject cycleSettings = (JSONObject) settings.get(this.specced());
+            return cycleSettings.get(setting);
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Finds in the JSON all the cycle settings for the current spec.
+     * @return A hash with all the settings.
+     */
+    public Map<String, Object> cycleSettings() {
+        Map<String, Object> settingsMap = new HashMap<String, Object>();
+        JSONObject settingsForSpec = null;
+        try {
+            JSONObject settings = (JSONObject) charJSON.get("cycleSettings");
+            settingsForSpec = (JSONObject) settings.get(this.specced());
+            String[] keys = JSONObject.getNames(settingsForSpec);
+            for (String key : keys) {
+                settingsMap.put(key, settingsForSpec.get(key));
+            }
+        }
+        catch (JSONException e) {
+            return null;
+        }
+        return settingsMap;
+    }
+
     public Integer[] itemIDs() {
         JSONObject items = (JSONObject) this.get("items");
         List<Integer> l = new ArrayList<Integer>();
-        for (String s : itemMap.keySet()) {
+        for (String s : Data.itemMap.keySet()) {
             try {
                 JSONObject item = items.getJSONObject(s);
                 l.add(item.getInt("id"));

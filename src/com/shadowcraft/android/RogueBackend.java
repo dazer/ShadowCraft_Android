@@ -2,6 +2,7 @@ package com.shadowcraft.android;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,12 +71,14 @@ public class RogueBackend {
             60298, 65240, 60299, 65241, 60300, 65242, 60302, 65243, 60301, 65239));
     private static Set<Integer> tier12IDs = new HashSet<Integer>(Arrays.asList(
             71046, 71538, 71047, 71539, 71048, 71540, 71049, 71541, 71045, 71537));
-    private static Set<Integer> arenaSetIDs = new HashSet<Integer>(Arrays.asList(
+    private static Set<Integer> PVPSetIDs = new HashSet<Integer>(Arrays.asList(
             60458, 60459, 60460, 60461, 60462, 64769, 64770, 64771, 64772, 64773,
             65545, 65546, 65547, 65548, 65549));
 
 
     public static DamageCalculator build(CharJSONHandler input) {
+        String specced = input.specced();
+        List<String> professions = input.professions();
         Integer[] itemIDs = input.itemIDs();
         Set<Integer> itemIDsSet = new HashSet<Integer>(Arrays.asList(itemIDs));
         Set<Integer> tier11Pieces = new HashSet<Integer>(itemIDsSet);
@@ -83,7 +86,7 @@ public class RogueBackend {
         Set<Integer> tier12Pieces = new HashSet<Integer>(itemIDsSet);
         tier12Pieces.retainAll(tier12IDs);
         Set<Integer> arenaPieces = new HashSet<Integer>(itemIDsSet);
-        arenaPieces.retainAll(arenaSetIDs);
+        arenaPieces.retainAll(PVPSetIDs);
 
         // Set up buffs.
         Buffs raid_buffs = new Buffs(input.buffs());
@@ -112,18 +115,26 @@ public class RogueBackend {
         for (int i : gearBuffsIDs) {
             procsSet.add(gearBuffsMap.get(i));
         }
-        gearBuffsSet.add("leather_specialization");
-        if (tier11Pieces.size() >= 2) {
+        gearBuffsSet.add("leather_specialization");  // defaulted
+        if (tier11Pieces.size() >= 2)
             gearBuffsSet.add("rogue_t11_2pc");
-        }
-        if (tier12Pieces.size() >= 2) {
+        if (tier12Pieces.size() >= 2)
             gearBuffsSet.add("rogue_t12_2pc");
-        }
-        if (tier12Pieces.size() >= 4) {
+        if (tier12Pieces.size() >= 4)
             gearBuffsSet.add("rogue_t12_4pc");
-        }
-        //TODO metaGem
-        //TODO tolvirPots
+        if ((Boolean) input.fightSettings("pre_pot"))
+            gearBuffsSet.add("potion_of_the_tolvir_prepot");
+        if ((Boolean) input.fightSettings("combat_pot"))
+            gearBuffsSet.add("potion_of_the_tolvir");
+        if (professions.contains("alchemy"))
+            gearBuffsSet.add("mixology");
+        if (professions.contains("herbalism"))
+            gearBuffsSet.add("lifeblood");
+        if (professions.contains("skinning"))
+            gearBuffsSet.add("master_of_anatomy");
+        if (professions.contains("engineering"))
+            gearBuffsSet.add("synapse_springs");
+        //TODO chaotic metaGem
         GearBuffs gear_buffs = new GearBuffs(gearBuffsSet);
 
         // Set up a calcs object.
@@ -137,9 +148,9 @@ public class RogueBackend {
         stat_hash.put("exp",        new Float(297));
         stat_hash.put("haste",      new Float(1719));
         stat_hash.put("mastery",    new Float(2032));
-        stat_hash.put("mh",         mh);
-        stat_hash.put("oh",         oh);
-        stat_hash.put("ranged",     ranged);
+        stat_hash.put("mh",         mh);  //TODO
+        stat_hash.put("oh",         oh);  //TODO
+        stat_hash.put("ranged",     ranged);  //TODO
         stat_hash.put("procs",      procs);
         stat_hash.put("gear_buffs", gear_buffs);
         Stats stats = new Stats(stat_hash);
@@ -153,28 +164,44 @@ public class RogueBackend {
         // Set up race.
         Race race = new Race(input.race(), input.gameClass());
 
-        // Set up cycle. TODO
-        /*
-         * HashMap<String, Object> cycle_hash = new HashMap<String, Object>();
-         * cycle_hash.put("min_envenom_size_mutilate", new Integer (4));
-         * cycle_hash.put("min_envenom_size_backstab", new Integer (5));
-         * cycle_hash.put("prioritize_rupture_uptime_mutilate", new Boolean (true));
-         * cycle_hash.put("prioritize_rupture_uptime_backstab", new Boolean (true));
-         */
-        Cycle cycle = new Cycle.AssassinationCycle();
+        // Set up cycle.
+        Map<String, Object> cycleSettingsHash = input.cycleSettings();
+        Cycle cycle = null;
+        if (specced.equals("assassination"))
+            cycle = new Cycle.AssassinationCycle(cycleSettingsHash);
+        else if (specced.equals("combat"))
+            cycle = new Cycle.CombatCycle(cycleSettingsHash);
+        else if (specced.equals("subtlety"))
+            cycle = new Cycle.SubtletyCycle(cycleSettingsHash);
 
-        // Set up settings. TODO
-        HashMap<String, Object> settings_hash = new HashMap<String, Object>();
-        settings_hash.put("cycle",          cycle);
-        settings_hash.put("response_time",  new Double(1));
-        settings_hash.put("duration",       new Double(360));
-        /*
-         * settings_hash.put("time_in_execute_range", new Float (.35));
-         * settings_hash.put("tricks_on_cooldown", new Boolean (true));
-         * settings_hash.put("mh_poison", new String ("ip"));
-         * settings_hash.put("oh_poison", new String ("dp"));
-         */
-        Settings settings = new Settings(settings_hash);
+        // Set up settings.
+        String[] settingsQuery = null;
+        if (specced.equals("assassination")) {
+            settingsQuery = new String[] {"mh_poison", "oh_poison", "duration",
+                    "response_time", "tricks_on_cooldown", "time_in_execute_range"
+            };
+        }
+        else {
+            settingsQuery = new String[] {"mh_poison", "oh_poison", "duration",
+                    "response_time", "tricks_on_cooldown"
+            };
+        }
+        Map<String, Object> settingsHash = input.fightSettings(settingsQuery);
+        settingsHash.put("cycle", cycle);
+        // This is a bit haxy but it does the job: the engine must take doubles
+        // for these values, but JSON trims zero-float doubles to integers.
+        String[] forceDbl = {"duration", "response_time", "time_in_execute_range"};
+        double coerced;
+        for (String setting : forceDbl) {
+            try {
+                coerced = (Double) settingsHash.get(setting);
+            }
+            catch (ClassCastException e){
+                coerced = 1.0 * (Integer) settingsHash.get(setting);
+                settingsHash.put(setting, coerced);
+            }
+        }
+        Settings settings = new Settings(settingsHash);
 
         // Set up level
         int level = input.level();
