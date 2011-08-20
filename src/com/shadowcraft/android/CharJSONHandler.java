@@ -4,6 +4,7 @@ package com.shadowcraft.android;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -488,8 +489,6 @@ public class CharJSONHandler {
         }
         for (String key : args) {
             try {
-                //                if (key.equals("duration") || key.equals("response_time"))
-                //                    settingsMap.put(key, settings.get(key));
                 settingsMap.put(key, settings.get(key));
             }
             catch (JSONException e) {
@@ -507,8 +506,8 @@ public class CharJSONHandler {
         Map<String, Object> settingsMap = new HashMap<String, Object>();
         try {
             JSONObject settings = (JSONObject) charJSON.get("fightSettings");
-            String[] keys = JSONObject.getNames(settings);
-            for (String key : keys) {
+            for (Iterator<?> iter =  settings.keys(); iter.hasNext();) {
+                String key = (String) iter.next();
                 settingsMap.put(key, settings.get(key));
             }
         }
@@ -539,13 +538,13 @@ public class CharJSONHandler {
      */
     public Map<String, Object> cycleSettings() {
         Map<String, Object> settingsMap = new HashMap<String, Object>();
-        JSONObject settingsForSpec = null;
+        JSONObject cycleSettings = null;
         try {
             JSONObject settings = (JSONObject) charJSON.get("cycleSettings");
-            settingsForSpec = (JSONObject) settings.get(this.specced());
-            String[] keys = JSONObject.getNames(settingsForSpec);
-            for (String key : keys) {
-                settingsMap.put(key, settingsForSpec.get(key));
+            cycleSettings = (JSONObject) settings.get(this.specced());
+            for (Iterator<?> iter =  cycleSettings.keys(); iter.hasNext();) {
+                String key = (String) iter.next();
+                settingsMap.put(key, cycleSettings.get(key));
             }
         }
         catch (JSONException e) {
