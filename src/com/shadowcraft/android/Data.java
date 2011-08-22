@@ -1,6 +1,5 @@
 package com.shadowcraft.android;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +55,39 @@ public class Data {
         put("mainHand", 15);
         put("offHand",  16);
         put("ranged",   17);
+    }};
+
+    @SuppressWarnings("serial")
+    static final Map<Integer, String> invMap = new HashMap<Integer, String>(){{
+        // this is the inventory type field from Bnet
+        put( 0, null);
+        put( 1, "head");
+        put( 2, "neck");
+        put( 3, "shoulder");
+        put( 4, "shirt");
+        put( 5, "chest");
+        put( 6, "waist");
+        put( 7, "legs");
+        put( 8, "feet");
+        put( 9, "wrist");
+        put(10, "hands");
+        put(11, "finger");
+        put(12, "trinket");
+        put(13, "one_hand");
+        put(14, "shield");
+        put(15, "ranged");
+        put(16, "cloak");
+        put(17, "two_hand");
+        put(18, "bag");
+        put(19, "tabard");
+        put(20, "robe");
+        put(21, "main_hand");
+        put(22, "off_hand");
+        put(23, "held_in_off_hand");
+        put(24, "ammo");
+        put(25, "thrown");
+        put(26, "ranged_right");
+        put(28, "relic");
     }};
 
     @SuppressWarnings("serial")
@@ -167,60 +199,211 @@ public class Data {
         add(4, rogueGlyphMap);
     }};
 
-    static final List<String> BnetStatsMap = new ArrayList<String>(Arrays.asList(
-            "health",
-            "powerType",
-            "power",
-            "str",
-            "agi",
-            "sta",
-            "int",
-            "spr",
-            "attackPower",
-            "rangedAttackPower",
-            "mastery",
-            "masteryRating",
-            "crit",
-            "critRating",
-            "hitPercent",
-            "hitRating",
-            "hasteRating",
-            "expertiseRating",
-            "spellPower",
-            "spellPen",
-            "spellCrit",
-            "spellCritRating",
-            "spellHitPercent",
-            "spellHitRating",
-            "mana5",
-            "mana5Combat",
-            "armor",
-            "dodge",
-            "dodgeRating",
-            "parry",
-            "parryRating",
-            "block",
-            "blockRating",
-            "resil",
-            "mainHandDmgMin",
-            "mainHandDmgMax",
-            "mainHandSpeed",
-            "mainHandDps",
-            "mainHandExpertise",
-            "offHandDmgMin",
-            "offHandDmgMax",
-            "offHandSpeed",
-            "offHandDps",
-            "offHandExpertise",
-            "rangedDmgMin",
-            "rangedDmgMax",
-            "rangedSpeed",
-            "rangedDps",
-            "rangedCrit",
-            "rangedCritRating",
-            "rangedHitPercent",
-            "rangedHitRating"
-            ));
+    @SuppressWarnings("serial")
+    static final Map<Integer, String> BnetStatsMap = new HashMap<Integer, String>(){{
+        // put( 1, "health"});
+        put( 3, "agi");      // "agility"
+        put( 4, "str");      // "strength"
+        put( 5, "int");      // "intellect"
+        put( 6, "spi");      // "spirit"
+        put( 7, "sta");      // "stamina"
+        put(31, "hit");      // "hit_rating"
+        put(32, "crit");     // "crit_rating"
+        put(35, "resi");     // "resilience_rating"
+        put(36, "haste");    // "haste_rating"
+        put(37, "exp");      // "expertise_rating"
+        put(38, "ap");       // "attack_power"
+        put(45, "sp");       // "spell_power"
+        put(49, "mastery");  // "mastery_rating"
+        // 12, "defense_skill_rating"
+        // 13, "dodge_rating"
+        // 14, "parry_rating"
+        // 15, "block_rating"
+        // 16, "hit_melee_rating"
+        // 17, "hit_ranged_rating"
+        // 18, "hit_spell_rating"
+        // 19, "crit_melee_rating"
+        // 20, "crit_ranged_rating"
+        // 21, "crit_spell_rating"
+        // 22, "hit_melee_taken_rating"
+        // 23, "hit_ranged_taken_rating"
+        // 24, "hit_spell_taken_rating"
+        // 25, "crit_melee_taken_rating"
+        // 26, "crit_ranged_taken_rating"
+        // 27, "crit_spell_taken_rating"
+        // 28, "haste_melee_rating"
+        // 29, "haste_ranged_rating"
+        // 30, "haste_spell_rating"
+        // 33, "hit_taken_rating"
+        // 34, "crit_taken_rating"
+        // 39, "ranged_attack_power"
+        // 40, "feral_attack_power"
+        // 41, "spell_healing_done"
+        // 42, "spell_damage_done"
+        // 43, "mana_regeneration"
+        // 44, "armor_penetration_rating"
+        // 46, "health_regeneration"
+        // 47, "spell_penetration"
+        // 48, "block_value"
+        // 50, "extra_armor"
+        // 51, "fire_resistance"
+        // 52, "frost_resistance"
+        // 54, "shadow_resistance"
+        // 55, "nature_resistance"
+        // 56, "arcane_resistance"
+    }};
+
+    @SuppressWarnings("serial")
+    static final Map<Integer, String[]> reforgeMap = new HashMap<Integer, String[]>(){{
+        put(113, new String[] {"spi",       "dodge"});
+        put(114, new String[] {"spi",       "parry"});
+        put(115, new String[] {"spi",       "hit"});
+        put(116, new String[] {"spi",       "crit"});
+        put(117, new String[] {"spi",       "haste"});
+        put(118, new String[] {"spi",       "exp"});
+        put(119, new String[] {"spi",       "mastery"});
+        put(120, new String[] {"dodge",     "spi"});
+        put(121, new String[] {"dodge",     "parry"});
+        put(122, new String[] {"dodge",     "hit"});
+        put(123, new String[] {"dodge",     "crit"});
+        put(124, new String[] {"dodge",     "haste"});
+        put(125, new String[] {"dodge",     "exp"});
+        put(126, new String[] {"dodge",     "mastery"});
+        put(127, new String[] {"parry",     "spi"});
+        put(128, new String[] {"parry",     "dodge"});
+        put(129, new String[] {"parry",     "hit"});
+        put(130, new String[] {"parry",     "crit"});
+        put(131, new String[] {"parry",     "haste"});
+        put(132, new String[] {"parry",     "exp"});
+        put(133, new String[] {"parry",     "mastery"});
+        put(134, new String[] {"hit",       "spi"});
+        put(135, new String[] {"hit",       "dodge"});
+        put(136, new String[] {"hit",       "parry"});
+        put(137, new String[] {"hit",       "crit"});
+        put(138, new String[] {"hit",       "haste"});
+        put(139, new String[] {"hit",       "exp"});
+        put(140, new String[] {"hit",       "mastery"});
+        put(141, new String[] {"crit",      "spi"});
+        put(142, new String[] {"crit",      "dodge"});
+        put(143, new String[] {"crit",      "parry"});
+        put(144, new String[] {"crit",      "hit"});
+        put(145, new String[] {"crit",      "haste"});
+        put(146, new String[] {"crit",      "exp"});
+        put(147, new String[] {"crit",      "mastery"});
+        put(148, new String[] {"haste",     "spi"});
+        put(149, new String[] {"haste",     "dodge"});
+        put(150, new String[] {"haste",     "parry"});
+        put(151, new String[] {"haste",     "hit"});
+        put(152, new String[] {"haste",     "crit"});
+        put(153, new String[] {"haste",     "exp"});
+        put(154, new String[] {"haste",     "mastery"});
+        put(155, new String[] {"exp",       "spi"});
+        put(156, new String[] {"exp",       "dodge"});
+        put(157, new String[] {"exp",       "parry"});
+        put(158, new String[] {"exp",       "hit"});
+        put(159, new String[] {"exp",       "crit"});
+        put(160, new String[] {"exp",       "haste"});
+        put(161, new String[] {"exp",       "mastery"});
+        put(162, new String[] {"mastery",   "spi"});
+        put(163, new String[] {"mastery",   "dodge"});
+        put(164, new String[] {"mastery",   "parry"});
+        put(165, new String[] {"mastery",   "hit"});
+        put(166, new String[] {"mastery",   "crit"});
+        put(167, new String[] {"mastery",   "haste"});
+        put(168, new String[] {"mastery",   "exp"});
+    }};
+
+    static final int[][] reforgeWithStatIDMap = new int[][]{
+        //reforge ID, from stat ID, to stat ID
+        {113, 6, 13},
+        {114, 6, 14},
+        {115, 6, 31},
+        {116, 6, 32},
+        {117, 6, 36},
+        {118, 6, 37},
+        {119, 6, 49},
+        {120, 13, 6},
+        {121, 13, 14},
+        {122, 13, 31},
+        {123, 13, 32},
+        {124, 13, 36},
+        {125, 13, 37},
+        {126, 13, 49},
+        {127, 14, 6},
+        {128, 14, 13},
+        {129, 14, 31},
+        {130, 14, 32},
+        {131, 14, 36},
+        {132, 14, 37},
+        {133, 14, 49},
+        {134, 31, 6},
+        {135, 31, 13},
+        {136, 31, 14},
+        {137, 31, 32},
+        {138, 31, 36},
+        {139, 31, 37},
+        {140, 31, 49},
+        {141, 32, 6},
+        {142, 32, 13},
+        {143, 32, 14},
+        {144, 32, 31},
+        {145, 32, 36},
+        {146, 32, 37},
+        {147, 32, 49},
+        {148, 36, 6},
+        {149, 36, 13},
+        {150, 36, 14},
+        {151, 36, 31},
+        {152, 36, 32},
+        {153, 36, 37},
+        {154, 36, 49},
+        {155, 37, 6},
+        {156, 37, 13},
+        {157, 37, 14},
+        {158, 37, 31},
+        {159, 37, 32},
+        {160, 37, 36},
+        {161, 37, 49},
+        {162, 49, 6},
+        {163, 49, 13},
+        {164, 49, 14},
+        {165, 49, 31},
+        {166, 49, 32},
+        {167, 49, 36},
+        {168, 49, 37},
+    };
+    @SuppressWarnings("serial")
+    static final Map<Integer, String> professionsMap = new HashMap<Integer, String>(){{
+        put(773, "inscription");
+        put(755, "jewelcrafting");
+        put(393, "skinning");
+        put(333, "enchanting");
+        put(202, "engineering");
+        put(197, "tailoring");
+        put(186, "mining");
+        put(182, "herbalism");
+        put(171, "alchemy");
+        put(165, "leatherworking");
+        put(164, "blacksmithing");
+        // 794, "archaeology");
+        // 356, "fishing");
+        // 185, "cooking"
+        // 129, "first_aid");
+    }};
+
+    @SuppressWarnings("serial")
+    static final Map<Integer, String[]> qualityMap = new HashMap<Integer, String[]>(){{
+        put(0, new String[]{"poor",         "9D9D9D"});
+        put(1, new String[]{"common",       "FFFFFF"});
+        put(2, new String[]{"uncommon",     "1EFF00"});
+        put(3, new String[]{"rare",         "0070DD"});
+        put(4, new String[]{"epic",         "A335EE"});
+        put(5, new String[]{"legendary",    "FF8000"});
+        // put(6, new String[]{"artifact",     "E5CC80"});
+        put(7, new String[]{"heirloom",     "E5CC80"});
+        // put(8, new String[]{"quality_8",    "FFFF98"});
+        // put(9, new String[]{"quality_9",    "71D5FF"});
+    }};
 
     static final String[] statsMap = new String[] {
         "str",      // 0

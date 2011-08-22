@@ -2,7 +2,6 @@ package com.shadowcraft.android;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +40,11 @@ public class CharJSONHandler {
         return calculator;
     }
 
+    /**
+     * Once we have a way to cache the fields in the JSON, we should have this
+     * method build a new JSONString from the cache. For the time being we will
+     * be using the raw JSON and getters that return java structures.
+     */
     @Override
     public String toString() {
         return this.charJSON.toString();
@@ -61,21 +65,44 @@ public class CharJSONHandler {
         return json;
     }
 
+    /**
+     * This should, somehow, check for cached chars (outside the app). We're
+     * returning null if no cache is found (all cases for now)
+     * @param name
+     * @param realm
+     * @param region
+     * @return
+     */
+    public JSONObject getCached(String name, String realm, String region) {
+        // define a way to retrieve cached characters.
+        return null;
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // These functions append the default cycle and combat settings to newly
+    // created characters.
+    // /////////////////////////////////////////////////////////////////////////
+
     public void setDefault() {
         if (this.isClass("rogue"))
             rogueDefault();
-        else if (this.isClass(""))
-            ;
+        else if (this.isClass("otherClass"))
+            otherClassDefault();
     }
 
     public void rogueDefault() {
-        int[] buffs = {1, 2, 4, 5, 6, 9, 15, 20, 22, 26, 27, 28, 30, 31};
+        int[] buffArray = {1, 2, 4, 5, 6, 9, 15, 20, 22, 26, 27, 28, 30, 31};
         JSONObject assassination = new JSONObject();
         JSONObject combat = new JSONObject();
         JSONObject subtlety = new JSONObject();
         JSONObject cycleSettings = new JSONObject();
         JSONObject fightSettings = new JSONObject();
         try {
+            JSONArray buffs = new JSONArray();
+            for (int i : buffArray) {
+                buffs.put(i);
+            }
+
             assassination.put("min_envenom_size_mutilate", 4);
             assassination.put("min_envenom_size_backstab", 5);
             assassination.put("prioritize_rupture_uptime_mutilate", true);
@@ -109,11 +136,18 @@ public class CharJSONHandler {
         catch (JSONException ignore) {}
     }
 
+    public void otherClassDefault () {
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // When fetching a character from Bnet, we need to clean it up: flatten some
+    // nested entities and delete some fields
+    // /////////////////////////////////////////////////////////////////////////
+
     /**
      * Removes unused fields and reformats talents, glyphs and professions. It
      * will discard the non-active spec (talents and glyphs) in the current
-     * implementation; if we want to have those (for cached specs) there's some
-     * code stubs to do so.
+     * implementation.
      */
     public void cleanCharJSON() {
         charJSON.remove("lastModified");
@@ -122,57 +156,10 @@ public class CharJSONHandler {
         // json.remove("thumbnail");  // catch and use?
         // json.remove("name");
         // json.remove("realm");
+        flattenProfs();
+        flattenTalentsAndGlyphs();  // glyphs and talents come in the same field.
 
         try {
-            // this places nulls if no profession is retrieved.
-            JSONObject profs =  charJSON.getJSONObject("professions");
-            JSONArray primProfs = profs.getJSONArray("primary");
-            String [] profsStrings = new String[2];
-            for (int i = 0; i<primProfs.length(); i++) {
-                JSONObject prof = primProfs.getJSONObject(i);
-                String profString = prof.getString("name");
-                profsStrings[i] = profString.toLowerCase();
-            }
-            charJSON.put("professions", profsStrings);
-
-            // glyphs and talents come in the same field.
-            JSONArray talents = charJSON.getJSONArray("talents");
-            for (int i = 0; i<2; i++) {
-                JSONObject build = (JSONObject) talents.get(i);
-                boolean active = false;
-                try {
-                    active = (build.getBoolean("selected")) ? true : false;
-                }
-                catch (JSONException ignore) {}
-                if (!active) {
-                    continue;  // discard non-active build.
-                }
-
-                JSONObject allGlyphs = build.getJSONObject("glyphs");
-                List<Integer> glyphsIds = new ArrayList<Integer>();
-                for (String s : new String[] {"prime", "minor", "major"}) {
-                    JSONArray glyphs = allGlyphs.getJSONArray(s);
-                    for (int j=0; j<glyphs.length(); j++) {
-                        JSONObject glyph = glyphs.getJSONObject(j);
-                        int a = glyph.getInt("item");
-                        glyphsIds.add(a);
-                    }
-                }
-
-                JSONArray allTrees = build.getJSONArray("trees");
-                String[] talentStrings = new String[3];
-                for (int j=0; j<allTrees.length(); j++) {
-                    JSONObject spec = allTrees.getJSONObject(j);
-                    String specString = spec.getString("points");
-                    talentStrings[j] = specString;
-                }
-
-                // json.put("fetchedGLyphs_" + (i + 1), glyphsIds);
-                // json.put("fetchedTalents_" + (i + 1), talentStrings);
-                charJSON.put("glyphs", glyphsIds);
-                charJSON.put("talents", talentStrings);
-            }
-
             // TODO need to better format this field; consider caching items from
             // the database.
             JSONObject items = charJSON.getJSONObject("items");
@@ -203,20 +190,78 @@ public class CharJSONHandler {
     }
 
     /**
-     * This should, somehow, check for cached chars (outside the app). We're
-     * returning null if no cache is found (all cases for now)
-     * @param name
-     * @param realm
-     * @param region
-     * @return
+     * We are only interested in primary professions. This will replace the
+     * professions field with an array of, at most, two profession IDs.
      */
-    public JSONObject getCached(String name, String realm, String region) {
-        // define a way to retrieve cached characters.
-        return null;
+    public void flattenProfs() {
+        JSONArray profs = new JSONArray();
+        try {
+            JSONObject fetchedProfs = charJSON.getJSONObject("professions");
+            JSONArray primProfs = fetchedProfs.getJSONArray("primary");
+            for (int i = 0; i<primProfs.length(); i++) {
+                JSONObject prof = primProfs.getJSONObject(i);
+                profs.put(prof.getInt("id"));
+            }
+            charJSON.put("professions", profs);
+        }
+        catch (JSONException ignore) {}
     }
 
     /**
-     * Utility method to construct a JSON from a string.
+     * We are only interested in the active spec. If we want to have those the
+     * non-active one (for cached specs) there's some code stubs to do so.
+     */
+    public void flattenTalentsAndGlyphs() {
+        try {
+            JSONArray talents = charJSON.getJSONArray("talents");
+            for (int i = 0; i<2; i++) {
+                JSONObject build = (JSONObject) talents.get(i);
+                boolean active = false;
+                try {
+                    active = (build.getBoolean("selected")) ? true : false;
+                }
+                catch (JSONException ignore) {}
+                if (!active) {
+                    continue;  // discard non-active build.
+                }
+
+                JSONObject allGlyphs = build.getJSONObject("glyphs");
+                JSONArray glyphsIds = new JSONArray();
+                for (String s : new String[] {"prime", "minor", "major"}) {
+                    JSONArray glyphs = allGlyphs.getJSONArray(s);
+                    for (int j=0; j<glyphs.length(); j++) {
+                        JSONObject glyph = glyphs.getJSONObject(j);
+                        int a = glyph.getInt("item");
+                        glyphsIds.put(a);
+                    }
+                }
+
+                JSONArray allTrees = build.getJSONArray("trees");
+                JSONArray talentStrings = new JSONArray();
+                for (int j=0; j<allTrees.length(); j++) {
+                    JSONObject spec = allTrees.getJSONObject(j);
+                    String specString = spec.getString("points");
+                    talentStrings.put(specString);
+                }
+
+                // json.put("fetchedGLyphs_" + (i + 1), glyphsIds);
+                // json.put("fetchedTalents_" + (i + 1), talentStrings);
+                charJSON.put("glyphs", glyphsIds);
+                charJSON.put("talents", talentStrings);
+            }
+        }
+        catch (JSONException ignore) {}
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Utility methods
+    // /////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Utility method to construct a JSON from a string. Use only on strings you
+     * already know to be JSON: for the most part, the snapshots. The intent is
+     * to skip the try/catch during development, but proper exception handling
+     * should be done at some point. TODO
      * @param jsonString The string to be converted.
      * @return A JSONObject for the string.
      */
@@ -231,7 +276,24 @@ public class CharJSONHandler {
         return json;
     }
 
-    // general getters
+    /**
+     * Utility method to construct a JSONArray from a string.
+     * @see mkJSON
+     */
+    public JSONArray mkJSONArray(String jsonString) {
+        JSONArray json = null;
+        try {
+            json = new JSONArray(jsonString);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // General getters. Used during development.
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
      * General object getter. It returns null to emulate the Hash behavior.
@@ -248,17 +310,24 @@ public class CharJSONHandler {
     }
 
     /**
+     * General Number getter. It returns 0 to imply that the key is not present
+     */
+    public Number getNum(String name) {
+        try {
+            return (Number) this.charJSON.get(name);
+        }
+        catch (JSONException e) {
+            return 0;
+        }
+    }
+
+    /**
      * General string getter. It returns null to emulate the Hash behavior.
      * @param name The field to retrieve
      * @return The string or null if no string found.
      */
     public String getString(String name) {
-        try {
-            return this.charJSON.getString(name);
-        }
-        catch (JSONException e) {
-            return null;
-        }
+        return (String) this.get(name);
     }
 
     /**
@@ -267,32 +336,23 @@ public class CharJSONHandler {
      * @return The integer or 0 if no integer found.
      */
     public int getInt(String name) {
-        try {
-            return this.charJSON.getInt(name);
-        }
-        catch (JSONException e) {
-            return 0;
-        }
+        return (Integer) this.getNum(name);
     }
 
     /**
-     * General string array getter.
+     * General Double getter
      * @param name The field to retrieve
-     * @return An array with strings.
+     * @return The double or 0 if no integer found.
      */
-    public String[] getArray(String name) {
-        JSONArray a = (JSONArray) this.get(name);
-        List<String> l = new ArrayList<String>();
-        for (int i = 0; i<a.length(); i++) {
-            try {
-                l.add(a.getString(i));
-            }
-            catch (JSONException ignore) {}
-        }
-        return l.toArray(new String[]{});
+    public double getDouble(String name) {
+        return (Double) this.getNum(name);
     }
 
-    // particular getters
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Particular getters. If/when we cache the JSON to actual class fields,
+    // these should look a lot better.
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
      * Maps the integer value of the class to its string value.
@@ -329,11 +389,29 @@ public class CharJSONHandler {
 
     /**
      * Finds the professions in the JSON
-     * @return A list with the two primary professions; contains nulls for every
-     * profession that is not present.
+     * @return The JSONArray with primary professions by ID.
+     */
+    public JSONArray professionsIDs() {
+        return (JSONArray) this.get("professions");
+    }
+
+    /**
+     * Maps the professions in the JSON to their string value.
+     * @return A list with primary professions; or an empty list if no prof is
+     * present.
      */
     public List<String> professions() {
-        return Arrays.asList(this.getArray("professions"));
+        JSONArray profArray = professionsIDs();
+        List<String> profList = new ArrayList<String>();
+        for (int i = 0; i<profArray.length(); i++) {
+            try {
+                String prof = Data.professionsMap.get(profArray.get(i));
+                if (prof != null)
+                    profList.add(prof);
+            }
+            catch (JSONException ignore) {}
+        }
+        return profList;
     }
 
     /**
@@ -387,10 +465,10 @@ public class CharJSONHandler {
             }
         }
         if (maxSpent < 31 && totalSpent != maxSpent)
-            return null;
+            return null;  // TODO throw exception instead
         if (totalSpent <= 41 && totalSpent > 0)
             return Data.specMap.get(gameClass())[maxSpec];
-        return null;
+        return Data.specMap.get(gameClass())[0];
     }
 
     /**

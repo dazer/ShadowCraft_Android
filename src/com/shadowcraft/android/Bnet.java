@@ -1,6 +1,5 @@
 package com.shadowcraft.android;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +19,30 @@ public class Bnet {
         return getStringJSONFromRequest(uri.toString());
     }
 
-    public static String fetchItem(String id) {
+    public static String fetchItem(int id) {
         String host = "http://us.battle.net";
         String api = String.format("/api/wow//item/%s", id);  // double slash
         URI uri = mkURI(host + api);
         return getStringJSONFromRequest(uri.toString());
     }
+
+    //    public static BufferedImage fetchPortrait(String region, String thumbnail) {
+    //        region = region.toLowerCase();
+    //        // -profilemain   whole body
+    //        // -inset         waist up
+    //        // -avatar        64x64 icon
+    //        // -card          side view
+    //        thumbnail = thumbnail.replaceAll("-avatar", "-card");
+    //        String urlString = "http://%s.battle.net/static-render/%s/%s";
+    //        urlString = String.format(urlString, region, region, thumbnail);
+    //        BufferedImage img = null;
+    //        try {
+    //            URL url = new URL(urlString);
+    //            img = ImageIO.read(url);
+    //        }
+    //        catch (IOException ignore) {}
+    //        return img;
+    //    }
 
     public static URI mkURI(String uriString) {
         URI uri = null;
