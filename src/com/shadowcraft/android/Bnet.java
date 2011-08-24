@@ -4,15 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class Bnet {
 
     public static String fetchChar(String name, String realm, String region) {
-        String host = "http://" + region.toLowerCase() + ".battle.net";
+        name = normalize(name);
+        realm = normalize(realm);
+        String host = String.format("http://%s.battle.net", region);
         String api = String.format("/api/wow/character/%s/%s", realm, name);
         String fields = "?fields=items,talents,professions";
         URI uri = mkURI(host + api + fields);
@@ -24,6 +28,14 @@ public class Bnet {
         String api = String.format("/api/wow//item/%s", id);  // double slash
         URI uri = mkURI(host + api);
         return getStringJSONFromRequest(uri.toString());
+    }
+
+    public static String normalize(String string) {
+        try {
+            string = URLEncoder.encode(string, "UTF-8");
+        }
+        catch (UnsupportedEncodingException ignore) {}
+        return string;
     }
 
     //    public static BufferedImage fetchPortrait(String region, String thumbnail) {

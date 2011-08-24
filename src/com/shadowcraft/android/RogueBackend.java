@@ -171,8 +171,20 @@ public class RogueBackend {
             cycle = new Cycle.AssassinationCycle(cycleSettingsHash);
         else if (specced.equals("combat"))
             cycle = new Cycle.CombatCycle(cycleSettingsHash);
-        else if (specced.equals("subtlety"))
+        else if (specced.equals("subtlety")) {
+            String[] forceDbl = {"raid_crits_per_second", "hemo_interval"};
+            double coerced;
+            for (String setting : forceDbl) {
+                try {
+                    coerced = (Double) cycleSettingsHash.get(setting);
+                }
+                catch (ClassCastException e) {
+                    coerced = 1.0 * (Integer) cycleSettingsHash.get(setting);
+                    cycleSettingsHash.put(setting, coerced);
+                }
+            }
             cycle = new Cycle.SubtletyCycle(cycleSettingsHash);
+        }
 
         // Set up settings.
         String[] settingsQuery = null;
@@ -193,10 +205,12 @@ public class RogueBackend {
         String[] forceDbl = {"duration", "response_time", "time_in_execute_range"};
         double coerced;
         for (String setting : forceDbl) {
+            if (!Arrays.asList(settingsQuery).contains(setting))
+                continue;
             try {
                 coerced = (Double) settingsHash.get(setting);
             }
-            catch (ClassCastException e){
+            catch (ClassCastException e) {
                 coerced = 1.0 * (Integer) settingsHash.get(setting);
                 settingsHash.put(setting, coerced);
             }
@@ -214,5 +228,6 @@ public class RogueBackend {
         return calculator;
 
     }
+
 
 }
