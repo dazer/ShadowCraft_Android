@@ -42,7 +42,7 @@ public class ShadowcraftMain extends Activity {
         tvResult.setText("");
 
         bStart.setOnClickListener(new View.OnClickListener() {
-            // @Override
+            @Override
             public void onClick(View v) {
                 setCharHandler();
             }
