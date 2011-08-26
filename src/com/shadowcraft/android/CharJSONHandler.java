@@ -2,6 +2,7 @@ package com.shadowcraft.android;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,31 +30,60 @@ public class CharJSONHandler {
     private Map<String, HashMap<String, Object>> cycleSettings = new HashMap<String, HashMap<String, Object>>();
     private Map<String, Object> fightSettings = new HashMap<String, Object>();
     private JSONObject items;
+    private DamageCalculator calculator;
 
     /**
-     * Constructor.
-     * @param name
-     * @param realm
-     * @param region
+     * Constructor. As it currently stands, this will attempt to get a stored
+     * character in Bnet JSON style. Once we define how to store chars we should
+     * change these constructor to function properly.
+     * @param name The name of the character.
+     * @param realm The realm of the character
+     * @param region The region of the realm.
      */
     public CharJSONHandler (String name, String realm, String region) {
-        JSONObject charJSON = fetchChar(name, realm, region);
-        populateFromBnetJSON(charJSON);
-        setDefault();
+        JSONObject cache = getCached(name, realm, region);
+        if (cache == null) {
+            String jsonString = Bnet.fetchChar(name, realm, region);
+            JSONObject json = mkJSON(jsonString);
+            try {json.get("name");}
+            catch (JSONException e) {
+                System.out.println(json);
+                e.printStackTrace();
+                // TODO handle nok errors and stop execution
+            }
+            populateFromBnetJSON(json);
+            setDefault();
+            buildModeler();
+        }
+        else {
+            populateFromSnapshot(cache);
+            buildModeler();
+        }
     }
 
+    /**
+     * Constructor overload. This will take a JSON string in the format we are
+     * storing them. Note that this is to be used at run-time for now.
+     * @param json Stored JSON string
+     */
     public CharJSONHandler (String json) {
         JSONObject charJSON = mkJSON(json);
         populateFromSnapshot(charJSON);
+        buildModeler();
     }
 
     /**
      * Builds a string that can be parsed to JSON for easy storage of snapshots.
      * It will delete whitespace where possible. Notice that the talents field
-     * needs special casing or it could be trimmed of leading zeros.
+     * needs special casing or it could be trimmed off leading zeros.
      */
     @Override
     public String toString() {
+        class Strip {String strip(Object o) {
+            return o.toString().replaceAll(" ", "");
+        }}
+        Strip s = new Strip();
+
         final StringBuilder sb = new StringBuilder();
         sb.append("{name:'").append(name).append('\'');
         sb.append(",realm:'").append(realm).append('\'');
@@ -61,36 +91,18 @@ public class CharJSONHandler {
         sb.append(",race:").append(race);
         sb.append(",level:").append(level);
         sb.append(",thumbnail:'").append(thumbnail).append('\'');
-        sb.append(",professions:").append(strip(professions));
-        sb.append(",glyphs:").append(strip(glyphs));
+        sb.append(",professions:").append(s.strip(professions));
+        sb.append(",glyphs:").append(s.strip(glyphs));
         sb.append(",talents:['");
         sb.append(talents.get(0)).append("','");
         sb.append(talents.get(1)).append("','");
         sb.append(talents.get(2)).append("']");
         sb.append(",items:").append(items);
-        sb.append(",buffs:").append(strip(buffs));
-        sb.append(",cycleSettings:").append(strip(cycleSettings));
-        sb.append(",fightSettings:").append(strip(fightSettings));
+        sb.append(",buffs:").append(s.strip(buffs));
+        sb.append(",cycleSettings:").append(s.strip(cycleSettings));
+        sb.append(",fightSettings:").append(s.strip(fightSettings));
         sb.append("}");
         return sb.toString();
-    }
-
-    public JSONObject fetchChar(String name, String realm, String region) {
-        JSONObject json = null;
-        JSONObject cache = getCached(name, realm, region);
-        if (cache != null) {
-            return cache;
-        }
-        else {
-            String JSONString = Bnet.fetchChar(name, realm, region);
-            json = mkJSON(JSONString);
-            try {json.get("name");}
-            catch (JSONException e) {
-                System.out.println(json.toString());
-                // TODO handle nok errors
-            }
-        }
-        return json;
     }
 
     /**
@@ -111,7 +123,6 @@ public class CharJSONHandler {
      * @return a DamageCalculator object to retrieve data from.
      */
     public DamageCalculator buildModeler() {
-        DamageCalculator calculator = null;
         if (this.isClass("rogue"))
             calculator = RogueBackend.build(this);
         else if (this.isClass(""))
@@ -141,7 +152,34 @@ public class CharJSONHandler {
         }
     }
 
+    /**
+     * Parses the objects and arrays in the JSON input into java structures.
+     * @param charJSON The JSON input.
+     */
     public void populateFromSnapshot(JSONObject charJSON) {
+        class Deserializer {
+            void intArray(Collection<Integer> field, JSONArray a)
+                    throws JSONException {
+                for (int i = 0; i<a.length(); i++) {
+                    field.add(a.getInt(i));
+                }
+            }
+            void strArray(Collection<String> field, JSONArray a)
+                    throws JSONException {
+                for (int i = 0; i<a.length(); i++) {
+                    field.add(a.getString(i));
+                }
+            }
+            void objHash(Map<String, Object> field, JSONObject o)
+                    throws JSONException {
+                for(Iterator<?> it = o.keys(); it.hasNext();) {
+                    String key = (String) it.next();
+                    field.put(key, o.get(key));
+                }
+            }
+        }
+        Deserializer d = new Deserializer();
+
         try {
             name = charJSON.getString("name");
             realm = charJSON.getString("realm");
@@ -150,31 +188,36 @@ public class CharJSONHandler {
             level = charJSON.getInt("level");
             thumbnail = charJSON.getString("thumbnail");
             items = charJSON.getJSONObject("items");
-            JSONArray professions = charJSON.getJSONArray("professions");
-            for (int i = 0; i<professions.length(); i++) {
-                this.professions.add(professions.getInt(i));
-            }
-            JSONArray talents = charJSON.getJSONArray("talents");
-            for (int i = 0; i<talents.length(); i++) {
-                this.talents.add(talents.getString(i));
-            }
-            JSONArray glyphs = charJSON.getJSONArray("glyphs");
-            for (int i = 0; i<glyphs.length(); i++) {
-                this.glyphs.add(glyphs.getInt(i));
-            }
-            JSONArray buffs = charJSON.getJSONArray("buffs");
-            for (int i = 0; i<buffs.length(); i++) {
-                this.buffs.add(buffs.getInt(i));
-            }
-            JSONObject fightSettings = charJSON.getJSONObject("fightSettings");
-            for(Iterator<?> iter =  fightSettings.keys(); iter.hasNext();) {
-                String key = (String) iter.next();
-                this.fightSettings.put(key, fightSettings.get(key));
-            }
+            d.intArray(professions, charJSON.getJSONArray("professions"));
+            d.strArray(talents, charJSON.getJSONArray("talents"));
+            d.intArray(glyphs, charJSON.getJSONArray("glyphs"));
+            d.intArray(buffs, charJSON.getJSONArray("buffs"));
+            d.objHash(fightSettings, charJSON.getJSONObject("fightSettings"));
+            // JSONArray professions = charJSON.getJSONArray("professions");
+            // for (int i = 0; i<professions.length(); i++) {
+            //     this.professions.add(professions.getInt(i));
+            // }
+            // JSONArray talents = charJSON.getJSONArray("talents");
+            // for (int i = 0; i<talents.length(); i++) {
+            //     this.talents.add(talents.getString(i));
+            // }
+            // JSONArray glyphs = charJSON.getJSONArray("glyphs");
+            // for (int i = 0; i<glyphs.length(); i++) {
+            //     this.glyphs.add(glyphs.getInt(i));
+            // }
+            // JSONArray buffs = charJSON.getJSONArray("buffs");
+            // for (int i = 0; i<buffs.length(); i++) {
+            //     this.buffs.add(buffs.getInt(i));
+            // }
+            // JSONObject fightSettings = charJSON.getJSONObject("fightSettings");
+            // for(Iterator<?> iter =  fightSettings.keys(); iter.hasNext();) {
+            //     String key = (String) iter.next();
+            //     this.fightSettings.put(key, fightSettings.get(key));
+            // }
             JSONObject cycleSettings = charJSON.getJSONObject("cycleSettings");
             JSONObject specSettings;
             HashMap<String, Object> specSettingsMap;
-            for (Iterator<?> it =  cycleSettings.keys(); it.hasNext();) {
+            for (Iterator<?> it = cycleSettings.keys(); it.hasNext();) {
                 String spec = (String) it.next();
                 specSettings = cycleSettings.getJSONObject(spec);
                 specSettingsMap = new HashMap<String, Object>();
@@ -313,19 +356,9 @@ public class CharJSONHandler {
     public void otherClassDefault () {
     }
 
-
     // /////////////////////////////////////////////////////////////////////////
     // Utility methods
     // /////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Strips whitespace in Object.toString() to get the most compact snapshots.
-     * @param o The object to strip
-     * @return a space-less string
-     */
-    public String strip(Object o) {
-        return o.toString().replaceAll(" ", "");
-    }
 
     /**
      * Utility method to construct a JSON from a string. Use only on strings you
@@ -586,4 +619,26 @@ public class CharJSONHandler {
         }
     }
 
+    // /////////////////////////////////////////////////////////////////////////
+    // Modeler getters. Here lie some of the main methods from the modeler.
+    // /////////////////////////////////////////////////////////////////////////
+
+    /**
+     * If we want to access the modeler directly we can return the modeler
+     * object.
+     * 
+     * @return A DamageCaldualtor object initialized with our variables.
+     */
+    public DamageCalculator getDamageCalculator() {
+        return calculator;
+    }
+
+    /**
+     * Calls the get_dps method of the modeler.
+     * 
+     * @return The dps.
+     */
+    public double getDPS() {
+        return calculator.get_dps();
+    }
 }

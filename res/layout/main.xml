@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
@@ -8,85 +8,107 @@
   android:layout_gravity="bottom"
   android:orientation="vertical"
 >
-  <include
-    android:layout_width="wrap_content"
-    layout="@layout/header"
-    android:id="@+id/include1"
-    android:layout_height="wrap_content" />
-  <TextView
+  <LinearLayout
     android:layout_width="fill_parent"
-    android:text="@string/start_name"
-    android:layout_height="wrap_content"
-    android:id="@+id/start_text_name" />
-  <EditText
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:layout_marginLeft="20px"
-    android:id="@+id/start_field_name" />
-  <TextView
-    android:layout_width="fill_parent"
-    android:text="@string/start_realm"
-    android:layout_height="wrap_content"
-    android:id="@+id/start_text_realm" />
-  <EditText
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="20px"
-    android:id="@+id/start_field_realm" />
-  <TextView
-    android:layout_width="fill_parent"
-    android:text="@string/start_region"
-    android:layout_height="wrap_content"
-    android:id="@+id/start_text_region" />
-  <RadioGroup
-    android:layout_width="fill_parent"
-    android:orientation="horizontal"
-    android:layout_height="wrap_content"
-    android:baselineAligned="true"
-    android:id="@+id/start_radiog_region"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
   >
-    <RadioButton
-      android:checked="true"
-      android:layout_height="wrap_content"
-      android:text="@string/start_region_eu"
+    <include
       android:layout_width="wrap_content"
-      android:id="@+id/start_radio_eu" />
-    <RadioButton
+      layout="@layout/header"
+      android:id="@+id/include1"
+      android:layout_height="wrap_content" />
+    <TextView
       android:layout_height="wrap_content"
-      android:text="@string/start_region_us"
-      android:layout_width="wrap_content"
-      android:id="@+id/start_radio_us" />
-    <RadioButton
-      android:layout_height="wrap_content"
-      android:text="@string/start_region_tw"
-      android:layout_width="wrap_content"
-      android:id="@+id/start_radio_tw" />
-    <RadioButton
-      android:text="@string/start_region_kr"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:id="@+id/start_radio_kr" />
-    <RadioButton
-      android:text="@string/start_region_cn"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:id="@+id/start_radio_cn" />
-  </RadioGroup>
-  <Button
+      android:layout_width="fill_parent"
+      android:id="@+id/start_result"
+      android:text="init"
+    ></TextView>
+  </LinearLayout>
+  <LinearLayout
     android:layout_width="fill_parent"
-    android:textStyle="bold"
-    android:textSize="20dp"
-    android:text="@string/start_start_button"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="30px"
-    android:layout_marginRight="30px"
-    android:layout_gravity="center_horizontal"
-    android:id="@+id/start_start_button" />
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+  >
+    <TextView
+      android:layout_width="fill_parent"
+      android:text="@string/start_name"
+      android:layout_height="wrap_content"
+      android:id="@+id/start_text_name" />
+    <EditText
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:layout_marginLeft="20px"
+      android:id="@+id/start_field_name" />
+    <TextView
+      android:layout_width="fill_parent"
+      android:text="@string/start_realm"
+      android:layout_height="wrap_content"
+      android:id="@+id/start_text_realm" />
+    <EditText
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="20px"
+      android:id="@+id/start_field_realm" />
+    <TextView
+      android:layout_width="fill_parent"
+      android:text="@string/start_region"
+      android:layout_height="wrap_content"
+      android:id="@+id/start_text_region" />
+    <RadioGroup
+      android:layout_width="fill_parent"
+      android:orientation="horizontal"
+      android:layout_height="wrap_content"
+      android:baselineAligned="true"
+      android:id="@+id/start_radiog_region"
+    >
+      <RadioButton
+        android:checked="true"
+        android:layout_height="wrap_content"
+        android:text="@string/start_region_eu"
+        android:layout_width="wrap_content"
+        android:id="@+id/start_radio_eu" />
+      <RadioButton
+        android:layout_height="wrap_content"
+        android:text="@string/start_region_us"
+        android:layout_width="wrap_content"
+        android:id="@+id/start_radio_us" />
+      <RadioButton
+        android:layout_height="wrap_content"
+        android:text="@string/start_region_tw"
+        android:layout_width="wrap_content"
+        android:id="@+id/start_radio_tw" />
+      <RadioButton
+        android:text="@string/start_region_kr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_radio_kr" />
+      <RadioButton
+        android:text="@string/start_region_cn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/start_radio_cn" />
+    </RadioGroup>
+    <Button
+      android:layout_width="fill_parent"
+      android:textStyle="bold"
+      android:textSize="20dp"
+      android:text="@string/start_start_button"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="30px"
+      android:layout_marginRight="30px"
+      android:layout_gravity="center_horizontal"
+      android:id="@+id/start_start_button" />
+  </LinearLayout>
   <TextView
-    android:layout_gravity="bottom|left"
-    android:textSize="10dp"
-    android:text="@string/start_bottom"
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content" />
+    android:text="@string/start_bottom"
+    android:textSize="10dp"
+    android:layout_width="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+  ></TextView>
 
-</LinearLayout>
+</RelativeLayout>

@@ -405,6 +405,55 @@ public class Data {
         // put(9, new String[]{"quality_9",    "71D5FF"});
     }};
 
+    static final String[][][][] talentIconMap = new String[][][][] {
+        // [class][tree][tier][talent]
+        {null},
+        {null},
+        {null},
+        {null},
+        {
+            {
+                {"ability_rogue_deadlymomentum", "ability_rogue_eviscerate", "ability_criticalstrike", null},
+                {"ability_druid_disembowel", "ability_rogue_quickrecovery", "ability_backstab", "ability_rogue_blackjack"},
+                {"ability_rogue_deadlybrew", "spell_ice_lament", "ability_rogue_feigndeath", null},
+                {"ability_rogue_deadenednerves", "ability_rogue_stayofexecution", null, null},
+                {"spell_shadow_deathscream", "ability_hunter_rapidkilling", "ability_creature_poison_06", "ability_warrior_riposte"},
+                {null, "ability_rogue_cuttothechase", "ability_rogue_venomouswounds", null},
+                {null, "ability_rogue_deadliness", null, null}
+            },
+            {
+                {"ability_rogue_improvedrecuperate", "spell_shadow_ritualofsacrifice", "ability_marksmanship", null},
+                {"ability_rogue_slicedice", "ability_rogue_sprint", "ability_racial_avatar", "ability_kick"},
+                {"spell_nature_invisibilty", "inv_sword_97", "ability_rogue_reinforcedleather", "ability_gouge"},
+                {null, "inv_weapon_shortblade_38", "ability_rogue_bladetwisting", null},
+                {"ability_rogue_throwingspecialization", "spell_shadow_shadowworddominate", "ability_creature_disease_03", null},
+                {"ability_rogue_preyontheweak", null, "ability_rogue_restlessblades", null},
+                {null, "ability_rogue_murderspree", null, null}
+            },
+            {
+                {"ability_stealth", "ability_rogue_ambush", "ability_warrior_decisivestrike", null},
+                {"spell_magic_lesserinvisibilty", "ability_rogue_waylay", "ability_rogue_bloodsplatter", "spell_shadow_fumble"},
+                {"ability_rogue_sturdyrecuperate", "ability_rogue_findweakness", "spell_shadow_lifedrain", null},
+                {"ability_rogue_honoramongstthieves", "spell_shadow_possession", null, "ability_rogue_envelopingshadows"},
+                {"ability_rogue_cheatdeath", "ability_rogue_preparation", "ability_rogue_sanguinaryvein", null},
+                {null, "ability_rogue_slaughterfromtheshadows", "inv_sword_17", null},
+                {null, "ability_rogue_shadowdance", null, null}
+            }
+        }
+    };
+
+    static final int[][][] maxTalentMap = new int[][][] {
+        // [class][tree][talent]
+        {null},
+        {null},
+        {null},
+        {null},
+        {{2,3,3,0,3,2,3,2,2,1,3,0,3,2,0,0,2,1,1,2,0,3,2,0,0,1,0,0},
+            {2,3,3,0,2,2,3,2,3,1,2,2,0,3,2,0,2,1,2,0,3,0,2,0,0,1,0,0},
+            {2,3,3,0,2,2,3,2,3,2,1,0,3,1,0,3,3,1,2,0,0,3,2,0,0,1,0,0}},
+            {null}
+    };
+
     static final String[] statsMap = new String[] {
         "str",      // 0
         "agi",      // 1

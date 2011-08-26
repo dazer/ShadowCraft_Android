@@ -20,3 +20,6 @@ gen/
 .classpath
 .metadata/
 .settings/
+
+# because winXp is *that* stubborn
+Thumbs.db

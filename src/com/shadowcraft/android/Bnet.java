@@ -88,6 +88,7 @@ public class Bnet {
             int responseCode = urlConnection.getResponseCode();
             // Read the correct stream based on the response code.
             if ((responseCode == 404) || (responseCode == 500)) {
+                // System.out.println(urlConnection);
                 InputStream input = urlConnection.getErrorStream();
                 reader = new BufferedReader(new InputStreamReader(input));
             }
