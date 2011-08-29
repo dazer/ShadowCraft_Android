@@ -7,6 +7,9 @@ however, the spirit of the project remains intact. For further information on
 the inner workings of the aforementioned program refer to ShadowCraft-Engine
 and ShadowCraftUI here on GitHub.
 
+We are using the JDK 1.6 for both the engine and the app, so make sure your IDE
+is set up correctly.
+
 As a general rule, we are using these conventions:
 -CamelCase for classes, lowercase_and_underscore (in the engine) or
 lowercaseAndCamelCase (in the front-end) for methods and variables ,

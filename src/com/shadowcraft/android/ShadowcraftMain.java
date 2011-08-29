@@ -3,14 +3,16 @@ package com.shadowcraft.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class ShadowcraftMain extends Activity {
+public class ShadowcraftMain extends Activity implements OnClickListener {
 
+    private APP             app;
     private String          name, realm, region;
     private EditText        etName, etRealm;
     private RadioButton     rbEU, rbUS, rbTW, rbKR, rbCN;
@@ -28,6 +30,7 @@ public class ShadowcraftMain extends Activity {
     }
 
     public void init() {
+        app = (APP) getApplication();
         etName = (EditText) findViewById(R.id.start_field_name);
         etRealm = (EditText) findViewById(R.id.start_field_realm);
         rbEU = (RadioButton) findViewById(R.id.start_radio_eu);
@@ -40,13 +43,7 @@ public class ShadowcraftMain extends Activity {
         // Have a text view to check some stuff as we go.
         tvResult = (TextView) findViewById(R.id.start_result);
         tvResult.setText("");
-
-        bStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setCharHandler();
-            }
-        });
+        bStart.setOnClickListener(this);
     }
 
     public void extractStrings() {
@@ -73,8 +70,22 @@ public class ShadowcraftMain extends Activity {
     public void setCharHandler() {
         extractStrings();
         charHandler = new CharJSONHandler(name, realm, region);
-        Double dps = charHandler.getDPS();
-        tvResult.setText(dps.toString());
+        app.setCharHandler(charHandler);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.start_start_button:
+            setCharHandler();
+            Double dps = charHandler.getDPS();
+            tvResult.setText(dps.toString());
+            break;
+        case R.id.bStartTalents:
+            if (app.existsCharHandler())
+                ;
+            break;
+        }
     }
 
 }
