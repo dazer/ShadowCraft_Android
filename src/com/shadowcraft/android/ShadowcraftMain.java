@@ -1,6 +1,7 @@
 package com.shadowcraft.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +17,7 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
     private String          name, realm, region;
     private EditText        etName, etRealm;
     private RadioButton     rbEU, rbUS, rbTW, rbKR, rbCN;
-    private Button          bStart;
+    private Button          bStart, bAux;
     private CharJSONHandler charHandler;
     private TextView        tvResult;
 
@@ -39,11 +40,13 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         rbKR = (RadioButton) findViewById(R.id.start_radio_kr);
         rbCN = (RadioButton) findViewById(R.id.start_radio_cn);
         bStart = (Button) findViewById(R.id.start_start_button);
+        bAux = (Button) findViewById(R.id.bStartTalents);
 
         // Have a text view to check some stuff as we go.
         tvResult = (TextView) findViewById(R.id.start_result);
         tvResult.setText("");
         bStart.setOnClickListener(this);
+        bAux.setOnClickListener(this);
     }
 
     public void extractStrings() {
@@ -84,6 +87,9 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         case R.id.bStartTalents:
             if (app.existsCharHandler())
                 ;
+            // quick access to talents
+            Intent i = new Intent(ShadowcraftMain.this, Talents.class);
+            startActivity(i);
             break;
         }
     }
