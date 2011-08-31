@@ -16,7 +16,10 @@
       layout="@layout/talent"
       android:id="@+id/include03"
       android:layout_height="wrap_content" />
-    <TextView />
+    <include
+      layout="@layout/talent"
+      android:id="@+id/include03"
+      android:layout_height="wrap_content" />
     <include
       layout="@layout/talent"
       android:id="@+id/include03"

@@ -7,24 +7,22 @@
   android:padding="5dp"
 >
   <ImageView
-    android:src="@drawable/ability_rogue_envelopingshadows"
-    android:id="@+id/imageView1"
-    android:layout_width="45dp"
+    android:id="@+id/ivTalentIcon"
+    android:layout_width="35dp"
     android:padding="0px"
-    android:layout_height="45dp"
+    android:layout_height="35dp"
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true" />
   <ImageView
     android:src="@drawable/t_overglow"
-    android:id="@+id/imageView2"
-    android:layout_width="45dp"
-    android:layout_height="45dp"
+    android:id="@+id/ivTalentOverlay"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true" />
   <TextView
-    android:text="2/2"
     android:textAppearance="?android:attr/textAppearanceSmall"
-    android:id="@+id/textView1"
+    android:id="@+id/tvTalentSpent"
     android:textSize="8dp"
     android:paddingRight="2dp"
     android:background="@color/bg_color"
@@ -33,8 +31,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true"
-    android:layout_marginTop="35dp"
-    android:layout_marginLeft="35dp" />
+    android:layout_marginTop="25dp"
+    android:layout_marginLeft="25dp"/>
 
 </RelativeLayout>
 
