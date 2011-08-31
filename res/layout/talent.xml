@@ -14,6 +14,7 @@
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true" />
   <ImageView
+    android:visibility="gone" 
     android:src="@drawable/t_overglow"
     android:id="@+id/ivTalentOverlay"
     android:layout_width="35dp"
