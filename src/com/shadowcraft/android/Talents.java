@@ -98,9 +98,9 @@ public class Talents extends Activity implements OnClickListener {
         int c = getResources().getColor(R.color.icon_frame);
 
         if (mask == null) {
-            mask = new Paint();
-            mask.setAntiAlias(true);
+            mask = new Paint(Paint.ANTI_ALIAS_FLAG);
             mask.setColor(c);
+            mask.setAlpha(255);
             mask.setStrokeWidth(s);
             porter_DST_ATOP = new PorterDuffXfermode(Mode.DST_ATOP);
             proter_SRC_IN = new PorterDuffXfermode(Mode.SRC_IN);
@@ -129,7 +129,6 @@ public class Talents extends Activity implements OnClickListener {
 
         return processedIcon;
     }
-
 
     @Override
     public void onClick(View v) {

@@ -1,5 +1,7 @@
 package com.shadowcraft.android;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
     private Button          bStart, bAux;
     private CharJSONHandler charHandler;
     private TextView        tvResult;
+    private DataBaseHelper  dbHandler;
 
     /** Called when the activity is first created. */
     @Override
@@ -28,6 +31,7 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         init();
+        initDb();
     }
 
     public void init() {
@@ -47,6 +51,23 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         tvResult.setText("");
         bStart.setOnClickListener(this);
         bAux.setOnClickListener(this);
+    }
+
+    public void initDb() {
+        dbHandler = new DataBaseHelper(this);
+        try {
+            dbHandler.createDataBase();
+        }
+        catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        dbHandler.close();
+        //try {
+        //    dbHandler.openDataBase();
+        //}
+        //catch(SQLException sqle) {
+        //    throw sqle;
+        //}
     }
 
     public void extractStrings() {
