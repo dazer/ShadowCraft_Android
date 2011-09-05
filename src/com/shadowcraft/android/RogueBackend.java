@@ -76,7 +76,7 @@ public class RogueBackend {
             65545, 65546, 65547, 65548, 65549));
 
 
-    public static DamageCalculator build(CharJSONHandler input) {
+    public static DamageCalculator build(CharHandler input) {
         String specced = input.specced();
         List<String> professions = input.professions();
         Integer[] itemIDs = input.itemIDs();

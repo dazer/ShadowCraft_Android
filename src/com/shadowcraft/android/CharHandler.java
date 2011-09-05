@@ -1,6 +1,7 @@
 package com.shadowcraft.android;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,8 +15,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.util.Log;
 import calcs.DamageCalculator;
-public class CharJSONHandler {
+public class CharHandler extends Activity{
 
     private String name;
     private String realm;
@@ -31,6 +34,7 @@ public class CharJSONHandler {
     private Map<String, Object> fightSettings = new HashMap<String, Object>();
     private JSONObject items;
     private DamageCalculator calculator;
+    private DataBaseHelper dbHandler = getDbHandler();
 
     /**
      * Constructor. As it currently stands, this will attempt to get a stored
@@ -40,7 +44,7 @@ public class CharJSONHandler {
      * @param realm The realm of the character
      * @param region The region of the realm.
      */
-    public CharJSONHandler (String name, String realm, String region) {
+    public CharHandler (String name, String realm, String region) {
         JSONObject cache = getCached(name, realm, region);
         if (cache == null) {
             String jsonString = Bnet.fetchChar(name, realm, region);
@@ -59,6 +63,10 @@ public class CharJSONHandler {
             populateFromSnapshot(cache);
             buildModeler();
         }
+        dbHandler.openDataBase();
+        Map<String, Object> test =  dbHandler.getItem(52199);
+        dbHandler.close();
+        Log.v("ShadowCraft", " "+test.toString());
     }
 
     /**
@@ -66,7 +74,7 @@ public class CharJSONHandler {
      * storing them. Note that this is to be used at run-time for now.
      * @param json Stored JSON string
      */
-    public CharJSONHandler (String json) {
+    public CharHandler (String json) {
         JSONObject charJSON = mkJSON(json);
         populateFromSnapshot(charJSON);
         buildModeler();
@@ -128,6 +136,24 @@ public class CharJSONHandler {
         else if (this.isClass(""))
             ;
         return calculator;
+    }
+
+    public DataBaseHelper getDbHandler() {
+        dbHandler = new DataBaseHelper(this);
+        try {
+            dbHandler.createDataBase();
+        }
+        catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        dbHandler.close();
+        return dbHandler;
+        //try {
+        //    dbHandler.openDataBase();
+        //}
+        //catch(SQLException sqle) {
+        //    throw sqle;
+        //}
     }
 
     // /////////////////////////////////////////////////////////////////////////

@@ -4,8 +4,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -107,6 +113,49 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Custom methods to get info from the data base
+    // /////////////////////////////////////////////////////////////////////////
+
+    public Map<String, Object> getItem(long id) {
+        Map<String, Object> itemMap = new HashMap<String, Object>();
+        String[] columns = new String[] {"name", "icon", "quality", "itemLevel",
+                "gem1", "gem2", "gem3", "Stat1Amount", "Stat1Id", "Stat2Amount",
+                "Stat2Id", "Stat3Amount", "Stat3Id", "Stat4Amount", "Stat4Id"};
+        Cursor c = db.query("items", columns, "_id=" + id, null, null, null, null);
+        if (c != null) {
+            c.moveToFirst();
+
+            for (String key : Arrays.asList("name", "icon")) {
+                itemMap.put(key, c.getString(c.getColumnIndexOrThrow(key)));
+            }
+            for (String key : Arrays.asList("quality", "itemLevel")) {
+                itemMap.put(key, c.getInt(c.getColumnIndexOrThrow(key)));
+            }
+
+            List<String> gems = new ArrayList<String>();
+            for (String s : Arrays.asList("gem1", "gem2", "gem3")) {
+                String gem = c.getString(c.getColumnIndexOrThrow(s));
+                if (gem==null)
+                    break;
+                gems.add(gem);
+            }
+            itemMap.put("sockets",  gems);
+
+            List<Stat> stats = new ArrayList<Stat>();
+            for (int i = 1; i<=4; i++) {
+                int statId = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Id"));
+                if (statId == 0)
+                    break;
+                float statVl = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Amount"));
+                Stat stat = new Stat(statId, statVl);
+                stats.add(stat);
+            }
+            itemMap.put("stats", stats);
+        }
+        return itemMap;
     }
 
 }

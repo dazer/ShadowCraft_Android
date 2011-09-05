@@ -4,19 +4,19 @@ import android.app.Application;
 
 public class APP extends Application {
 
-    private CharJSONHandler charHandler = null;
+    private CharHandler charHandler = null;
 
     /**
      * @return the charHandler
      */
-    public CharJSONHandler getCharHandler() {
+    public CharHandler getCharHandler() {
         return charHandler;
     }
 
     /**
      * @param charHandler the charHandler to set
      */
-    public void setCharHandler(CharJSONHandler charHandler) {
+    public void setCharHandler(CharHandler charHandler) {
         this.charHandler = charHandler;
     }
 
