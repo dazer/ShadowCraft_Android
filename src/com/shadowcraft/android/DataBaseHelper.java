@@ -155,6 +155,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             }
             itemMap.put("stats", stats);
         }
+        c.close();
         return itemMap;
     }
 

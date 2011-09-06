@@ -94,7 +94,8 @@ public class Bnet {
             }
             else {
                 InputStream input = urlConnection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(input));
+                int size = 16 * 1024;
+                reader = new BufferedReader(new InputStreamReader(input), size);
             }
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append('\n');

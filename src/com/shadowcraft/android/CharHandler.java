@@ -313,16 +313,34 @@ public class CharHandler extends Activity{
         }
     }
 
+    /**
+     * Parse the items JSON into POJO. This will pup empty hashes on empty slots
+     * and always create a gems fields, which can be an empty list. We use
+     * multiple try/catch since not every field is always available.
+     * @param json The JSON input form Bnet
+     * @throws JSONException if the input doesn't make sense.
+     */
     public void setItemsFromJSON(JSONObject json) throws JSONException {
         itemStats = new HashMap<String, HashMap<String, Object>>();
         charItems = new HashMap<String, HashMap<String, Object>>();
         JSONObject items = json.getJSONObject("items");
-        for (Iterator<?> it = items.keys(); it.hasNext();) {
-            String slot = (String) it.next();
-            if (slot.equals("tabard") || slot.equals("tabard"))
+        for (String slot : Data.itemMap.keySet()) {
+            if (slot.equals("shirt") || slot.equals("tabard"))
                 continue;
             HashMap<String, Object> item = new HashMap<String, Object>();
             JSONObject itemJSON = items.getJSONObject(slot);
+
+            // ID; not having this field implies the slot is empty, so we
+            // populate with an empty hash and continue on to the next item.
+            try {
+                item.put("id", itemJSON.getInt("id"));
+            }
+            catch (JSONException e) {
+                charItems.put(slot, item);
+                continue;
+            }
+
+            // Extract the enchant and reforge fields if they exist.
             JSONObject params = itemJSON.getJSONObject("tooltipParams");
             for (String param : Arrays.asList("enchant", "reforge")) {
                 try {
@@ -330,16 +348,27 @@ public class CharHandler extends Activity{
                 }
                 catch (JSONException ignore) {}
             }
+
             // This ensures we always have a gem list in every item.
+            // 0 indicates an empty slot.
             List<Integer> gems = new ArrayList<Integer>();
-            for (String param : Arrays.asList("gem0", "gem1", "gem2")) {
+            gems.addAll(Arrays.asList(0, 0, 0));
+            for (int i = 0; i<3; i++) {
                 try {
-                    gems.add(params.getInt(param));
+                    gems.set(i, params.getInt("gem" + i));
                 }
                 catch (JSONException ignore) {}
             }
+            // Remove trailing zeros in the gems field
+            // TODO this should be done in toString()
+            for (int i = 2; i>=0; i--) {
+                if (gems.get(i) == 0)
+                    gems.remove(i);
+                else
+                    break;
+            }
             item.put("gems", gems);
-            item.put("id", itemJSON.getInt("id"));
+
             charItems.put(slot, item);
         }
     }
