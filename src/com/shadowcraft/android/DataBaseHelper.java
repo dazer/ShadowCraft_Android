@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -119,8 +118,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     // Custom methods to get info from the data base
     // /////////////////////////////////////////////////////////////////////////
 
-    public Map<String, Object> getItem(long id) {
-        Map<String, Object> itemMap = new HashMap<String, Object>();
+    public HashMap<String, Object> getItem(long id) {
+        HashMap<String, Object> itemMap = new HashMap<String, Object>();
         String[] columns = new String[] {"name", "icon", "quality", "itemLevel",
                 "gem1", "gem2", "gem3", "Stat1Amount", "Stat1Id", "Stat2Amount",
                 "Stat2Id", "Stat3Amount", "Stat3Id", "Stat4Amount", "Stat4Id"};

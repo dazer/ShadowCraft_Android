@@ -12,8 +12,8 @@ public class Stat extends Tuple_2<Object, Object>{
         return (Integer) super.getFirst();
     }
 
-    public float getValue() {
-        return (Float) super.getSecond();
+    public double getValue() {
+        return  (Double) super.getSecond();
     }
 
 }

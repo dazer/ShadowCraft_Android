@@ -313,6 +313,66 @@ public class Data {
         put(168, new String[] {"mastery",   "exp"});
     }};
 
+    @SuppressWarnings("serial")
+    static final Map<Integer, Integer[]> reforgeIDMap = new HashMap<Integer, Integer[]>(){{
+        put(113, new Integer[] {6, 13});
+        put(114, new Integer[] {6, 14});
+        put(115, new Integer[] {6, 31});
+        put(116, new Integer[] {6, 32});
+        put(117, new Integer[] {6, 36});
+        put(118, new Integer[] {6, 37});
+        put(119, new Integer[] {6, 49});
+        put(120, new Integer[] {13, 6});
+        put(121, new Integer[] {13, 14});
+        put(122, new Integer[] {13, 31});
+        put(123, new Integer[] {13, 32});
+        put(124, new Integer[] {13, 36});
+        put(125, new Integer[] {13, 37});
+        put(126, new Integer[] {13, 49});
+        put(127, new Integer[] {14, 6});
+        put(128, new Integer[] {14, 13});
+        put(129, new Integer[] {14, 31});
+        put(130, new Integer[] {14, 32});
+        put(131, new Integer[] {14, 36});
+        put(132, new Integer[] {14, 37});
+        put(133, new Integer[] {14, 49});
+        put(134, new Integer[] {31, 6});
+        put(135, new Integer[] {31, 13});
+        put(136, new Integer[] {31, 14});
+        put(137, new Integer[] {31, 32});
+        put(138, new Integer[] {31, 36});
+        put(139, new Integer[] {31, 37});
+        put(140, new Integer[] {31, 49});
+        put(141, new Integer[] {32, 6});
+        put(142, new Integer[] {32, 13});
+        put(143, new Integer[] {32, 14});
+        put(144, new Integer[] {32, 31});
+        put(145, new Integer[] {32, 36});
+        put(146, new Integer[] {32, 37});
+        put(147, new Integer[] {32, 49});
+        put(148, new Integer[] {36, 6});
+        put(149, new Integer[] {36, 13});
+        put(150, new Integer[] {36, 14});
+        put(151, new Integer[] {36, 31});
+        put(152, new Integer[] {36, 32});
+        put(153, new Integer[] {36, 37});
+        put(154, new Integer[] {36, 49});
+        put(155, new Integer[] {37, 6});
+        put(156, new Integer[] {37, 13});
+        put(157, new Integer[] {37, 14});
+        put(158, new Integer[] {37, 31});
+        put(159, new Integer[] {37, 32});
+        put(160, new Integer[] {37, 36});
+        put(161, new Integer[] {37, 49});
+        put(162, new Integer[] {49, 6});
+        put(163, new Integer[] {49, 13});
+        put(164, new Integer[] {49, 14});
+        put(165, new Integer[] {49, 31});
+        put(166, new Integer[] {49, 32});
+        put(167, new Integer[] {49, 36});
+        put(168, new Integer[] {49, 37});
+    }};
+
     static final int[][] reforgeWithStatIDMap = new int[][]{
         //reforge ID, from stat ID, to stat ID
         {113, 6, 13},
@@ -372,6 +432,7 @@ public class Data {
         {167, 49, 36},
         {168, 49, 37},
     };
+
     @SuppressWarnings("serial")
     static final Map<Integer, String> professionsMap = new HashMap<Integer, String>(){{
         put(773, "inscription");

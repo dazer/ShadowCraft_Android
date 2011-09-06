@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -34,7 +35,7 @@ public class CharHandler extends Activity{
     private Map<String, HashMap<String, Object>> cycleSettings = new HashMap<String, HashMap<String, Object>>();
     private Map<String, Object> fightSettings = new HashMap<String, Object>();
     private JSONObject items;  // These are not final
-    private Map<String, HashMap<String, Object>> itemStats;  // Info from the DB
+    private Map<String, HashMap<String, Object>> itemCache;  // Info from the DB
     private Map<String, HashMap<String, Object>> charItems;  // Info from the snapshots (or bnet import)
     private DamageCalculator calculator;
     private DataBaseHelper dbHandler = getDbHandler();
@@ -66,10 +67,6 @@ public class CharHandler extends Activity{
             populateFromSnapshot(cache);
             buildModeler();
         }
-        dbHandler.openDataBase();
-        Map<String, Object> test =  dbHandler.getItem(52199);
-        dbHandler.close();
-        Log.v("ShadowCraft", " "+test.toString());
     }
 
     /**
@@ -321,9 +318,10 @@ public class CharHandler extends Activity{
      * @throws JSONException if the input doesn't make sense.
      */
     public void setItemsFromJSON(JSONObject json) throws JSONException {
-        itemStats = new HashMap<String, HashMap<String, Object>>();
+        itemCache = new HashMap<String, HashMap<String, Object>>();
         charItems = new HashMap<String, HashMap<String, Object>>();
         JSONObject items = json.getJSONObject("items");
+        dbHandler.openDataBase();
         for (String slot : Data.itemMap.keySet()) {
             if (slot.equals("shirt") || slot.equals("tabard"))
                 continue;
@@ -332,8 +330,10 @@ public class CharHandler extends Activity{
 
             // ID; not having this field implies the slot is empty, so we
             // populate with an empty hash and continue on to the next item.
+            int id;
             try {
-                item.put("id", itemJSON.getInt("id"));
+                id = itemJSON.getInt("id");
+                item.put("id", id);
             }
             catch (JSONException e) {
                 charItems.put(slot, item);
@@ -370,10 +370,13 @@ public class CharHandler extends Activity{
             item.put("gems", gems);
 
             charItems.put(slot, item);
+            itemCache.put(slot, dbHandler.getItem(id));
         }
+        dbHandler.close();
+        Log.v("ShadowCraft", charItems.toString());
+        Log.v("ShadowCraft", itemCache.toString());
+        Log.v("ShadwoCraft", Arrays.asList(sumStats()).toString());
     }
-
-
 
     // /////////////////////////////////////////////////////////////////////////
     // These functions append the default cycle and combat settings to newly
@@ -503,6 +506,38 @@ public class CharHandler extends Activity{
         if (totalSpent <= 41 && totalSpent > 0)
             return Data.specMap.get(gameClass())[maxSpec];
         return Data.specMap.get(gameClass())[0];
+    }
+
+    /**
+     * Computes the stats from gear using itemStats and charItem fields.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Double[] sumStats() {
+        Double[] sumStats = new Double[56];  // yes, 56 different stats total.
+        for (int i = 0; i<=56; i++) {
+            sumStats[i] = 0.;
+        }
+        for (Entry<String, HashMap<String, Object>> e: itemCache.entrySet()) {
+            String slotName = e.getKey();
+            Map<String, Object> item = e.getValue();
+            if (item.isEmpty())
+                continue;
+            Map<String, Object> itemEquiped = charItems.get(slotName);
+            List<Stat> stats = (List<Stat>) item.get("stats");
+            Integer reforgeId = (Integer) itemEquiped.get("reforge");
+            Integer[] reforge = Data.reforgeIDMap.get(reforgeId);
+            for (Stat stat: stats) {
+                int statId = stat.getId();
+                sumStats[statId] += stat.getValue();
+                if (reforge != null && statId == reforge[0]) {
+                    int reforged = (int) (stat.getValue()) * 40 / 100;
+                    sumStats[statId] -= reforged;
+                    sumStats[reforge[1]] += reforged;
+                }
+            }
+        }
+        return sumStats;
     }
 
     // /////////////////////////////////////////////////////////////////////////
