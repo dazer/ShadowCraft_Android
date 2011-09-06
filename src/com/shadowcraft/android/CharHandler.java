@@ -3,6 +3,7 @@ package com.shadowcraft.android;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,9 @@ public class CharHandler extends Activity{
     private Set<Integer> buffs = new HashSet<Integer>();
     private Map<String, HashMap<String, Object>> cycleSettings = new HashMap<String, HashMap<String, Object>>();
     private Map<String, Object> fightSettings = new HashMap<String, Object>();
-    private JSONObject items;
+    private JSONObject items;  // These are not final
+    private Map<String, HashMap<String, Object>> itemStats;  // Info from the DB
+    private Map<String, HashMap<String, Object>> charItems;  // Info from the snapshots (or bnet import)
     private DamageCalculator calculator;
     private DataBaseHelper dbHandler = getDbHandler();
 
@@ -171,6 +174,7 @@ public class CharHandler extends Activity{
             items = charJSON.getJSONObject("items");
             setProfessionsFromJSON(charJSON);
             setTalentsFromJSON(charJSON);  // sets glyphs too
+            setItemsFromJSON(charJSON);
             cleanItems();
         }
         catch (JSONException e) {
@@ -219,27 +223,6 @@ public class CharHandler extends Activity{
             d.intArray(glyphs, charJSON.getJSONArray("glyphs"));
             d.intArray(buffs, charJSON.getJSONArray("buffs"));
             d.objHash(fightSettings, charJSON.getJSONObject("fightSettings"));
-            // JSONArray professions = charJSON.getJSONArray("professions");
-            // for (int i = 0; i<professions.length(); i++) {
-            //     this.professions.add(professions.getInt(i));
-            // }
-            // JSONArray talents = charJSON.getJSONArray("talents");
-            // for (int i = 0; i<talents.length(); i++) {
-            //     this.talents.add(talents.getString(i));
-            // }
-            // JSONArray glyphs = charJSON.getJSONArray("glyphs");
-            // for (int i = 0; i<glyphs.length(); i++) {
-            //     this.glyphs.add(glyphs.getInt(i));
-            // }
-            // JSONArray buffs = charJSON.getJSONArray("buffs");
-            // for (int i = 0; i<buffs.length(); i++) {
-            //     this.buffs.add(buffs.getInt(i));
-            // }
-            // JSONObject fightSettings = charJSON.getJSONObject("fightSettings");
-            // for(Iterator<?> iter =  fightSettings.keys(); iter.hasNext();) {
-            //     String key = (String) iter.next();
-            //     this.fightSettings.put(key, fightSettings.get(key));
-            // }
             JSONObject cycleSettings = charJSON.getJSONObject("cycleSettings");
             JSONObject specSettings;
             HashMap<String, Object> specSettingsMap;
@@ -329,6 +312,39 @@ public class CharHandler extends Activity{
             ignore.printStackTrace();
         }
     }
+
+    public void setItemsFromJSON(JSONObject json) throws JSONException {
+        itemStats = new HashMap<String, HashMap<String, Object>>();
+        charItems = new HashMap<String, HashMap<String, Object>>();
+        JSONObject items = json.getJSONObject("items");
+        for (Iterator<?> it = items.keys(); it.hasNext();) {
+            String slot = (String) it.next();
+            if (slot.equals("tabard") || slot.equals("tabard"))
+                continue;
+            HashMap<String, Object> item = new HashMap<String, Object>();
+            JSONObject itemJSON = items.getJSONObject(slot);
+            JSONObject params = itemJSON.getJSONObject("tooltipParams");
+            for (String param : Arrays.asList("enchant", "reforge")) {
+                try {
+                    item.put(param, params.getInt(param));
+                }
+                catch (JSONException ignore) {}
+            }
+            // This ensures we always have a gem list in every item.
+            List<Integer> gems = new ArrayList<Integer>();
+            for (String param : Arrays.asList("gem0", "gem1", "gem2")) {
+                try {
+                    gems.add(params.getInt(param));
+                }
+                catch (JSONException ignore) {}
+            }
+            item.put("gems", gems);
+            item.put("id", itemJSON.getInt("id"));
+            charItems.put(slot, item);
+        }
+    }
+
+
 
     // /////////////////////////////////////////////////////////////////////////
     // These functions append the default cycle and combat settings to newly
