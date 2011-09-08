@@ -15,9 +15,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper{
 
+    private static final String LOG_TAG = "ShadowCraft";
     private static String PACKAGE_NAME = "com.shadowcraft.android";
     private static String DB_PATH = "/data/data/" + PACKAGE_NAME + "/databases/";
     private static String DB_NAME = "SC_DATABASE.sqlite";
@@ -40,10 +42,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * Creates a empty database on the system and rewrites it.
      */
     public void createDataBase() throws IOException{
-        if(checkDataBase()){
+        if (checkDataBase()) {
             //do nothing - database already exists
         }
-        else{
+        else {
             this.getReadableDatabase();
             try {
                 copyDataBase();
@@ -60,15 +62,21 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @return true if it exists, false if it doesn't
      */
     private boolean checkDataBase() {
-        //context.deleteDatabase(DB_NAME);
         SQLiteDatabase checkDB = null;
-        try{
+        try {
             String path = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
         }
         catch(SQLiteException ignore){}  //database does't exist yet.
 
-        if(checkDB != null){
+        if (checkDB != null && checkDB.getVersion() < DB_VERSION) {
+            context.deleteDatabase(DB_NAME);
+            Log.i(LOG_TAG, "Database " + DB_NAME + " needs upgrade from version " + checkDB.getVersion() + " to " + DB_VERSION);
+            checkDB.close();
+            return false;
+        }
+
+        if (checkDB != null) {
             checkDB.close();
         }
         return (checkDB != null) ? true : false;
@@ -79,7 +87,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * database in the system folder, from where it can be accessed and handled.
      * This is done by transferring byte stream.
      */
-    private void copyDataBase() throws IOException{
+    private void copyDataBase() throws IOException {
         InputStream iStream = context.getAssets().open(DB_NAME);
         String path = DB_PATH + DB_NAME;
         OutputStream oStream = new FileOutputStream(path);
@@ -92,9 +100,14 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         oStream.flush();
         oStream.close();
         iStream.close();
+
+        db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
+        db.setVersion(DB_VERSION);
+        Log.i(LOG_TAG, "Created database version " + db.getVersion());
+        db.close();
     }
 
-    public void openDataBase() throws SQLException{
+    public void openDataBase() throws SQLException {
         String path = DB_PATH + DB_NAME;
         db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
     }

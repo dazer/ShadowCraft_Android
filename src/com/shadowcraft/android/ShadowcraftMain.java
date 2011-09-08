@@ -1,5 +1,7 @@
 package com.shadowcraft.android;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
+        initDB();
         init();
     }
 
@@ -48,6 +51,26 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         bStart.setOnClickListener(this);
         bAux.setOnClickListener(this);
     }
+
+    /**
+     * Creates and deletes the DB helper class to ensure that the DB exists and
+     * is up to date.
+     * It may be a good idea to pass this object to the class that actually uses
+     * the database instead of destroying it. Note that current version of the
+     * charHandler has no onCreate, no context, no way to initialize a database
+     * when the system doesn't have it yet, or any way to pass intents to it.
+     */
+    public void initDB() {
+        DataBaseHelper dbHandler = new DataBaseHelper(this);
+        try {
+            dbHandler.createDataBase();
+        }
+        catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        dbHandler.close();
+        dbHandler = null;
+    };
 
     public void extractStrings() {
         name = etName.getText().toString();

@@ -1,7 +1,6 @@
 package com.shadowcraft.android;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -140,12 +139,6 @@ public class CharHandler extends Activity{
 
     public DataBaseHelper getDbHandler() {
         dbHandler = new DataBaseHelper(this);
-        try {
-            dbHandler.createDataBase();
-        }
-        catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
         dbHandler.close();
         return dbHandler;
         //try {
@@ -514,7 +507,7 @@ public class CharHandler extends Activity{
      */
     @SuppressWarnings("unchecked")
     public Double[] sumStats() {
-        Double[] sumStats = new Double[56];  // yes, 56 different stats total.
+        Double[] sumStats = new Double[57];  // yes, 56 different stats total.
         for (int i = 0; i<=56; i++) {
             sumStats[i] = 0.;
         }
