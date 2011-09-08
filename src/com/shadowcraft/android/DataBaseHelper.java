@@ -135,7 +135,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         HashMap<String, Object> itemMap = new HashMap<String, Object>();
         String[] columns = new String[] {"name", "icon", "quality", "itemLevel",
                 "gem1", "gem2", "gem3", "Stat1Amount", "Stat1Id", "Stat2Amount",
-                "Stat2Id", "Stat3Amount", "Stat3Id", "Stat4Amount", "Stat4Id"};
+                "Stat2Id", "Stat3Amount", "Stat3Id", "Stat4Amount", "Stat4Id",
+                "slotBonusAmount", "slotBonusId"};
         Cursor c = db.query("items", columns, "_id=" + id, null, null, null, null);
         if (c != null) {
             c.moveToFirst();
@@ -156,8 +157,43 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             }
             itemMap.put("sockets",  gems);
 
+            int bonusId = c.getInt(c.getColumnIndexOrThrow("slotBonusId"));
+            float bonusVl = c.getInt(c.getColumnIndexOrThrow("slotBonusAmount"));
+            if (bonusId != 0)
+                itemMap.put("socketBonus", new Stat(bonusId, bonusVl));
+
             List<Stat> stats = new ArrayList<Stat>();
             for (int i = 1; i<=4; i++) {
+                int statId = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Id"));
+                if (statId == 0)
+                    break;
+                float statVl = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Amount"));
+                Stat stat = new Stat(statId, statVl);
+                stats.add(stat);
+            }
+            itemMap.put("stats", stats);
+        }
+        c.close();
+        return itemMap;
+    }
+
+    public HashMap<String, Object> getGem(long id) {
+        HashMap<String, Object> itemMap = new HashMap<String, Object>();
+        String[] columns = new String[] {"icon", "name", "color", "quality",
+                "Stat1Amount", "Stat1Id", "Stat2Amount", "Stat2Id"};
+        Cursor c = db.query("gems", columns, "_id=" + id, null, null, null, null);
+        if (c != null) {
+            c.moveToFirst();
+
+            for (String key : Arrays.asList("icon", "name", "color")) {
+                itemMap.put(key, c.getString(c.getColumnIndexOrThrow(key)));
+            }
+            for (String key : Arrays.asList("quality")) {
+                itemMap.put(key, c.getInt(c.getColumnIndexOrThrow("quality")));
+            }
+
+            List<Stat> stats = new ArrayList<Stat>();
+            for (int i = 1; i<=2; i++) {
                 int statId = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Id"));
                 if (statId == 0)
                     break;

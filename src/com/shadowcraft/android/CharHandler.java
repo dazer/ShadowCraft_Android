@@ -35,6 +35,7 @@ public class CharHandler extends Activity{
     private Map<String, Object> fightSettings = new HashMap<String, Object>();
     private JSONObject items;  // These are not final
     private Map<String, HashMap<String, Object>> itemCache;  // Info from the DB
+    private Map<Integer, HashMap<String, Object>> gemCache;  // Info from the DB
     private Map<String, HashMap<String, Object>> charItems;  // Info from the snapshots (or bnet import)
     private DamageCalculator calculator;
     private DataBaseHelper dbHandler = getDbHandler();
@@ -304,15 +305,16 @@ public class CharHandler extends Activity{
     }
 
     /**
-     * Parse the items JSON into POJO. This will pup empty hashes on empty slots
-     * and always create a gems fields, which can be an empty list. We use
-     * multiple try/catch since not every field is always available.
+     * Parse the items JSON into POJO. This will put empty hashes on empty slots.
+     * We use multiple try/catch since not every field is always available.
      * @param json The JSON input form Bnet
      * @throws JSONException if the input doesn't make sense.
      */
     public void setItemsFromJSON(JSONObject json) throws JSONException {
         itemCache = new HashMap<String, HashMap<String, Object>>();
+        gemCache = new HashMap<Integer, HashMap<String, Object>>();
         charItems = new HashMap<String, HashMap<String, Object>>();
+
         JSONObject items = json.getJSONObject("items");
         dbHandler.openDataBase();
         for (String slot : Data.itemMap.keySet()) {
@@ -342,25 +344,19 @@ public class CharHandler extends Activity{
                 catch (JSONException ignore) {}
             }
 
-            // This ensures we always have a gem list in every item.
-            // 0 indicates an empty slot.
-            List<Integer> gems = new ArrayList<Integer>();
-            gems.addAll(Arrays.asList(0, 0, 0));
+            // Extract the gem fields if they exist and populate the gem cache.
             for (int i = 0; i<3; i++) {
                 try {
-                    gems.set(i, params.getInt("gem" + i));
+                    String param = "gem" + i;
+                    int gemId = params.getInt(param);
+                    if (!gemCache.containsKey(gemId))
+                        gemCache.put(gemId, dbHandler.getGem(gemId));
+                    item.put(param, params.getInt(param));
                 }
-                catch (JSONException ignore) {}
+                catch (JSONException e) {
+                    continue;
+                }
             }
-            // Remove trailing zeros in the gems field
-            // TODO this should be done in toString()
-            for (int i = 2; i>=0; i--) {
-                if (gems.get(i) == 0)
-                    gems.remove(i);
-                else
-                    break;
-            }
-            item.put("gems", gems);
 
             charItems.put(slot, item);
             itemCache.put(slot, dbHandler.getItem(id));
@@ -368,6 +364,7 @@ public class CharHandler extends Activity{
         dbHandler.close();
         Log.v("ShadowCraft", charItems.toString());
         Log.v("ShadowCraft", itemCache.toString());
+        Log.v("ShadowCraft", gemCache.toString());
         Log.v("ShadwoCraft", Arrays.asList(sumStats()).toString());
     }
 
@@ -502,12 +499,14 @@ public class CharHandler extends Activity{
     }
 
     /**
-     * Computes the stats from gear using itemStats and charItem fields.
-     * @return
+     * Computes the stats from gear using the charItems class field along with
+     * cached items/gems from the database.
+     * @return An array with stats from gear indexed by the IDs from Bnet.
      */
     @SuppressWarnings("unchecked")
     public Double[] sumStats() {
         Double[] sumStats = new Double[57];  // yes, 56 different stats total.
+        boolean isBlacksmith = professions.contains(164);
         for (int i = 0; i<=56; i++) {
             sumStats[i] = 0.;
         }
@@ -517,10 +516,10 @@ public class CharHandler extends Activity{
             if (item.isEmpty())
                 continue;
             Map<String, Object> itemEquiped = charItems.get(slotName);
-            List<Stat> stats = (List<Stat>) item.get("stats");
+
             Integer reforgeId = (Integer) itemEquiped.get("reforge");
             Integer[] reforge = Data.reforgeIDMap.get(reforgeId);
-            for (Stat stat: stats) {
+            for (Stat stat: (List<Stat>) item.get("stats")) {
                 int statId = stat.getId();
                 sumStats[statId] += stat.getValue();
                 if (reforge != null && statId == reforge[0]) {
@@ -529,9 +528,54 @@ public class CharHandler extends Activity{
                     sumStats[reforge[1]] += reforged;
                 }
             }
+
+            Boolean getsBonus = true;
+            boolean colorCheck = false;
+            int gemCounter = 0;
+            for (String socket : (List<String>) item.get("sockets")) {
+                Integer gemId = (Integer) itemEquiped.get("gem" + gemCounter);
+                gemCounter++;
+                if (gemId == null || !gemCache.containsKey(gemId))
+                    continue;
+                HashMap<String, Object> gemData = gemCache.get(gemId);
+                String gemColor = (String) gemData.get("color");
+                if (Data.socketMap.containsKey(socket))
+                    colorCheck = Data.socketMap.get(socket).contains(gemColor);
+                if (!(colorCheck || socket.equals(gemColor)))
+                    getsBonus = false;
+                for (Stat stat: (List<Stat>) gemData.get("stats")) {
+                    sumStats[stat.getId()] += stat.getValue();
+                }
+            }
+
+            if (slotName.equals("waist") ||
+                    (isBlacksmith && slotName.equals("wrist")) ||
+                    (isBlacksmith && slotName.equals("hands"))) {
+                Integer gemId = (Integer) itemEquiped.get("gem" + gemCounter);
+                if (!(gemId == null || !gemCache.containsKey(gemId))) {
+                    HashMap<String, Object> gemData = gemCache.get(gemId);
+                    for (Stat stat: (List<Stat>) gemData.get("stats")) {
+                        sumStats[stat.getId()] += stat.getValue();
+                    }
+                }
+            }
+
+            Stat socketBonus = (Stat) item.get("socketBonus");
+            if (getsBonus && socketBonus != null) {
+                sumStats[socketBonus.getId()] += socketBonus.getValue();
+            }
         }
         return sumStats;
     }
+
+    public boolean checkSocket(String socket, String gem) {
+        if (socket.equals(gem) || socket.equals("PRISMATIC"))
+            return true;
+        else if (Data.socketMap.get(socket).contains(gem))
+            return true;
+        return false;
+    }
+
 
     // /////////////////////////////////////////////////////////////////////////
     // Field getters

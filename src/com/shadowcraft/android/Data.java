@@ -1,5 +1,6 @@
 package com.shadowcraft.android;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -432,6 +433,13 @@ public class Data {
         {167, 49, 36},
         {168, 49, 37},
     };
+
+    @SuppressWarnings("serial")
+    static final Map<String, ArrayList<String>> socketMap = new HashMap<String, ArrayList<String>>(){{
+        put("RED",      new ArrayList<String>(Arrays.asList("RED", "PURPLE", "ORANGE")));
+        put("BLUE",     new ArrayList<String>(Arrays.asList("BLUE", "PURPLE", "GREEN")));
+        put("YELLOW",   new ArrayList<String>(Arrays.asList("YELLOW", "ORANGE", "GREEN")));
+    }};
 
     @SuppressWarnings("serial")
     static final Map<Integer, String> professionsMap = new HashMap<Integer, String>(){{
