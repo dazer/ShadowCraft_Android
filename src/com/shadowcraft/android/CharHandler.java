@@ -530,7 +530,6 @@ public class CharHandler extends Activity{
             }
 
             Boolean getsBonus = true;
-            boolean colorCheck = false;
             int gemCounter = 0;
             for (String socket : (List<String>) item.get("sockets")) {
                 Integer gemId = (Integer) itemEquiped.get("gem" + gemCounter);
@@ -539,6 +538,7 @@ public class CharHandler extends Activity{
                     continue;
                 HashMap<String, Object> gemData = gemCache.get(gemId);
                 String gemColor = (String) gemData.get("color");
+                boolean colorCheck = false;
                 if (Data.socketMap.containsKey(socket))
                     colorCheck = Data.socketMap.get(socket).contains(gemColor);
                 if (!(colorCheck || socket.equals(gemColor)))
@@ -563,6 +563,16 @@ public class CharHandler extends Activity{
             Stat socketBonus = (Stat) item.get("socketBonus");
             if (getsBonus && socketBonus != null) {
                 sumStats[socketBonus.getId()] += socketBonus.getValue();
+            }
+
+            // TODO We should cache the enchants, just like the gems.
+            Integer enchantId = (Integer) itemEquiped.get("enchant");
+            if (enchantId != null) {
+                dbHandler.openDataBase();
+                for (Stat stat : dbHandler.getEnchantStats(enchantId)) {
+                    sumStats[stat.getId()] += stat.getValue();
+                }
+                dbHandler.close();
             }
         }
         return sumStats;

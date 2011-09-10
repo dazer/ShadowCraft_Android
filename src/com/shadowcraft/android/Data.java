@@ -442,6 +442,24 @@ public class Data {
     }};
 
     @SuppressWarnings("serial")
+    static final Map<Integer, Integer> allStatsEnchants = new HashMap<Integer, Integer>(){{
+        put(847,  1);
+        put(866,  2);
+        put(928,  3);
+        put(1891, 4);
+        put(2661, 6);
+        put(2931, 4);
+        put(3252, 8);
+        put(3254, 4);
+        put(3749, 4);
+        put(3750, 6);
+        put(3832, 10);
+        put(3879, 10);
+        put(4063, 15);
+        put(4102, 20);
+    }};
+
+    @SuppressWarnings("serial")
     static final Map<Integer, String> professionsMap = new HashMap<Integer, String>(){{
         put(773, "inscription");
         put(755, "jewelcrafting");

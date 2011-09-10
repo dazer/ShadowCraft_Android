@@ -131,6 +131,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     // Custom methods to get info from the data base
     // /////////////////////////////////////////////////////////////////////////
 
+    public Cursor simpleQuery(String table, String[] columns, String selection) {
+        return db.query(table, columns, selection, null, null, null,null);
+    }
+
     public HashMap<String, Object> getItem(long id) {
         HashMap<String, Object> itemMap = new HashMap<String, Object>();
         String[] columns = new String[] {"name", "icon", "quality", "itemLevel",
@@ -179,8 +183,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     public HashMap<String, Object> getGem(long id) {
         HashMap<String, Object> itemMap = new HashMap<String, Object>();
-        String[] columns = new String[] {"icon", "name", "color", "quality",
-                "Stat1Amount", "Stat1Id", "Stat2Amount", "Stat2Id"};
+        String[] columns = new String[] {"icon", "name", "color", "quality"};
         Cursor c = db.query("gems", columns, "_id=" + id, null, null, null, null);
         if (c != null) {
             c.moveToFirst();
@@ -191,20 +194,49 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             for (String key : Arrays.asList("quality")) {
                 itemMap.put(key, c.getInt(c.getColumnIndexOrThrow("quality")));
             }
-
-            List<Stat> stats = new ArrayList<Stat>();
-            for (int i = 1; i<=2; i++) {
-                int statId = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Id"));
-                if (statId == 0)
-                    break;
-                float statVl = c.getInt(c.getColumnIndexOrThrow("Stat" + i + "Amount"));
-                Stat stat = new Stat(statId, statVl);
-                stats.add(stat);
-            }
-            itemMap.put("stats", stats);
+            itemMap.put("stats", getEnchantStats(id, "GEM"));
         }
         c.close();
         return itemMap;
+    }
+
+    public List<Stat> getEnchantStats(long id, String searchFlag) {
+        String field = null;
+        if (searchFlag.equals("GEM"))
+            field = "id_gem";
+        else if (searchFlag.equals("ENCHANT"))
+            field = "_id";
+        else
+            field = "_id";
+        List<Stat> stats = new ArrayList<Stat>();
+        String[] columns = new String[] {field, "ench_type_1", "ench_type_2",
+                "ench_type_3", "ench_amount_1", "ench_amount_2", "ench_amount_3",
+                "ench_prop_1", "ench_prop_2", "ench_prop_3"};
+        String selection = field + "=" + id;
+        Cursor c = simpleQuery("enchants", columns, selection);
+        if (c != null) {
+            c.moveToFirst();
+            for (int i = 1; i<=3; i++) {
+                int statType = c.getInt(c.getColumnIndexOrThrow("ench_type_" + i));
+                if (statType != 5)  // type 5 are numeric stats.
+                    continue;
+                int statAmount = c.getInt(c.getColumnIndexOrThrow("ench_amount_" + i));
+                int statProp = c.getInt(c.getColumnIndexOrThrow("ench_prop_" + i));
+                stats.add(new Stat(statProp, statAmount));
+            }
+        }
+        c.close();
+        if (stats.isEmpty() && Data.allStatsEnchants.containsKey((int) id)) {
+            int amount = Data.allStatsEnchants.get((int) id);
+            for (int statId : new int[] {3, 4, 5, 6, 7}) {  //agi,str,int,spi,sta
+                stats.add(new Stat(statId, amount));
+            }
+        }
+        return stats;
+    }
+
+    public List<Stat> getEnchantStats(long id) {
+        return getEnchantStats(id, "ENCHANT");
     }
 
 }
