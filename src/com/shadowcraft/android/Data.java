@@ -2,8 +2,10 @@ package com.shadowcraft.android;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class Data {
@@ -201,7 +203,24 @@ public class Data {
     }};
 
     @SuppressWarnings("serial")
-    static final Map<Integer, String> BnetStatsMap = new HashMap<Integer, String>(){{
+    static final Map<String, Integer> BnetStatsMap = new HashMap<String, Integer>(){{
+        put("agi",      3);
+        put("str",      4);
+        put("int",      5);
+        put("spi",      6);
+        put("sta",      7);
+        put("hit",      31);
+        put("crit",     32);
+        put("resi",     35);
+        put("haste",    36);
+        put("exp",      37);
+        put("ap",       38);
+        put("sp",       45);
+        put("mastery",  49);
+    }};
+
+    @SuppressWarnings("serial")
+    static final Map<Integer, String> _BnetStatsMap = new HashMap<Integer, String>(){{
         // put( 1, "health"});
         put( 3, "agi");      // "agility"
         put( 4, "str");      // "strength"
@@ -440,6 +459,9 @@ public class Data {
         put("BLUE",     new ArrayList<String>(Arrays.asList("BLUE", "PURPLE", "GREEN")));
         put("YELLOW",   new ArrayList<String>(Arrays.asList("YELLOW", "ORANGE", "GREEN")));
     }};
+
+    static final Set<Integer> critMetaGems = new HashSet<Integer>(Arrays.asList(
+            34220, 41285, 52291, 68778, 68779, 68780));
 
     @SuppressWarnings("serial")
     static final Map<Integer, Integer> allStatsEnchants = new HashMap<Integer, Integer>(){{

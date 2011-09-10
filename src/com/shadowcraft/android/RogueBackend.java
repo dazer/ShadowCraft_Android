@@ -134,20 +134,19 @@ public class RogueBackend {
             gearBuffsSet.add("master_of_anatomy");
         if (professions.contains("engineering"))
             gearBuffsSet.add("synapse_springs");
-        //TODO chaotic metaGem
+        if (Data.critMetaGems.contains(input.metaGem()))
+            gearBuffsSet.add("chaotic_metagem");
         GearBuffs gear_buffs = new GearBuffs(gearBuffsSet);
 
         // Set up a calcs object.
-        //TODO numeric stats
+        Double[] statsArray = input.sumStats();
         HashMap<String, Object> stat_hash = new HashMap<String, Object>();
-        stat_hash.put("str",        new Float(20));
-        stat_hash.put("agi",        new Float(6248));
-        stat_hash.put("ap",         new Float(190));
-        stat_hash.put("crit",       new Float(624));
-        stat_hash.put("hit",        new Float(1331));
-        stat_hash.put("exp",        new Float(297));
-        stat_hash.put("haste",      new Float(1719));
-        stat_hash.put("mastery",    new Float(2032));
+        String[] modelerStats = new String[] {"str", "agi", "ap", "crit", "hit",
+                "exp", "haste", "mastery"};
+        for (String statName : modelerStats) {
+            int statIndex = Data.BnetStatsMap.get(statName);
+            stat_hash.put(statName, new Float(statsArray[statIndex]));
+        }
         stat_hash.put("mh",         mh);  //TODO
         stat_hash.put("oh",         oh);  //TODO
         stat_hash.put("ranged",     ranged);  //TODO
