@@ -1,10 +1,12 @@
 package com.shadowcraft.android;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 public class APP extends Application {
 
     private CharHandler charHandler = null;
+    private IconHandler iconHandler = null;
 
     /**
      * @return the charHandler
@@ -27,5 +29,15 @@ public class APP extends Application {
         return this.charHandler != null;
     }
 
+    /**
+     * @return the iconHandler
+     */
+    public IconHandler getIconHandler() {
+        if (iconHandler == null) {
+            Resources res = getResources();
+            iconHandler = new IconHandler(res);
+        }
+        return iconHandler;
+    }
 
 }

@@ -19,7 +19,7 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
     private String          name, realm, region;
     private EditText        etName, etRealm;
     private RadioButton     rbEU, rbUS, rbTW, rbKR, rbCN;
-    private Button          bStart, bAux;
+    private Button          bStart, bAux, bAux2;
     private CharHandler     charHandler;
     private TextView        tvResult;
 
@@ -44,12 +44,14 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
         rbCN = (RadioButton) findViewById(R.id.start_radio_cn);
         bStart = (Button) findViewById(R.id.start_start_button);
         bAux = (Button) findViewById(R.id.bStartTalents);
+        bAux2 = (Button) findViewById(R.id.bStartGear);
 
         // Have a text view to check some stuff as we go.
         tvResult = (TextView) findViewById(R.id.start_result);
         tvResult.setText("");
         bStart.setOnClickListener(this);
         bAux.setOnClickListener(this);
+        bAux2.setOnClickListener(this);
     }
 
     /**
@@ -113,6 +115,13 @@ public class ShadowcraftMain extends Activity implements OnClickListener {
             // quick access to talents
             Intent i = new Intent(ShadowcraftMain.this, Talents.class);
             startActivity(i);
+            break;
+        case R.id.bStartGear:
+            if (app.existsCharHandler())
+                ;
+            // quick access to gear
+            Intent i2 = new Intent(ShadowcraftMain.this, Gear.class);
+            startActivity(i2);
             break;
         }
     }

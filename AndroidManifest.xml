@@ -15,6 +15,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Talents" android:label="@string/app_name"/>
+        <activity android:name=".Gear" android:label="@string/app_name"/>
 
     </application>
 </manifest>
