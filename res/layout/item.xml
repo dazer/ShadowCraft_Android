@@ -2,56 +2,67 @@
 
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_height="wrap_content" android:padding="1dp" android:layout_width="wrap_content">
+  android:orientation="horizontal"
+  android:layout_height="wrap_content"
+  android:layout_width="fill_parent"
+  android:background="@drawable/sc_glass"
+  android:padding="1dp"
+>
+  <ImageView
+    android:src="@drawable/ability_backstab"
+    android:layout_height="50dp"
+    android:layout_width="50dp"
+    android:padding="2dp"
+    android:id="@+id/ivItemIcon" />
   <LinearLayout
     android:id="@+id/linearLayout1"
-    android:orientation="horizontal"
-    android:background="@drawable/sc_item_bg_white" android:layout_width="fill_parent" android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:padding="2dp"
+    android:layout_height="wrap_content"
+  >
     <ImageView
-      android:src="@drawable/ability_backstab"
-      android:layout_height="50dp"
-      android:layout_width="50dp" android:padding="2dp" android:id="@+id/ivItemIcon"></ImageView>
-    <LinearLayout
-      android:id="@+id/linearLayout1"
-      android:orientation="vertical"
-      android:layout_height="fill_parent"
-      android:layout_width="wrap_content" android:padding="2dp">
-      <ImageView
-        android:id="@+id/imageView2"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-      android:src="@drawable/sc_sockets_meta"></ImageView>
-      <ImageView
-        android:id="@+id/imageView4"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-      android:src="@drawable/sc_sockets_red" android:paddingBottom="1dp" android:paddingTop="1dp"></ImageView>
-            <ImageView
-        android:src="@drawable/sc_sockets_blue"
-        android:id="@+id/imageView4"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-      ></ImageView>
-    </LinearLayout>
-    <LinearLayout
-      android:id="@+id/linearLayout2"
-      android:orientation="vertical"
-      android:layout_height="fill_parent"
+      android:src="@drawable/sc_sockets_meta"
+      android:id="@+id/ivGem0"
+      android:layout_height="15dp"
+      android:adjustViewBounds="true"
+      android:layout_width="15dp" />
+    <ImageView
+      android:src="@drawable/sc_sockets_red"
+      android:id="@+id/ivGem1"
+      android:layout_height="15dp"
+      android:adjustViewBounds="true"
+      android:layout_width="15dp"
+      android:layout_marginTop="1dp"
+      android:layout_marginBottom="1dp" />
+    <ImageView
+      android:src="@drawable/sc_sockets_blue"
+      android:id="@+id/ivGem2"
+      android:layout_height="15dp"
+      android:adjustViewBounds="true"
+      android:layout_width="15dp" />
+  </LinearLayout>
+  <LinearLayout
+    android:id="@+id/linearLayout2"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+  >
+    <TextView
       android:layout_width="wrap_content"
-    >
-      <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/textView1"
-        android:text="TextView"
-        android:layout_height="wrap_content"
-      ></TextView>
-      <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/textView2"
-        android:text="TextView"
-        android:layout_height="wrap_content"
-      ></TextView>
-    </LinearLayout>
+      android:id="@+id/textView1"
+      android:text="TextView"
+      android:layout_height="wrap_content" />
+    <TextView
+      android:layout_width="wrap_content"
+      android:id="@+id/textView2"
+      android:text="TextView"
+      android:layout_height="wrap_content" />
+    <TextView
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:text="TextView"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:id="@+id/textView3" />
   </LinearLayout>
 </LinearLayout>

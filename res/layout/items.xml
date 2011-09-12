@@ -17,12 +17,22 @@
       android:id="@+id/llGear"
       android:orientation="vertical"
       android:paddingTop="50dp"
+      android:paddingRight="10dp"
+      android:paddingLeft="5dp"
     >
-      <include
-        android:id="@+id/include2"
-        layout="@layout/item"
-        android:layout_height="wrap_content"
-      android:layout_width="fill_parent"></include>
+        <include android:id="@+id/item01" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item02" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item03" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item04" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item05" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item06" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item07" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item08" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item09" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item10" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item11" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item12" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
+        <include android:id="@+id/item13" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item" android:layout_margin="1dp"/>
     </LinearLayout>
   </ScrollView>
   <include

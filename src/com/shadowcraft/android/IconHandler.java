@@ -14,6 +14,8 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 
 import com.shadowcraft.android.R.drawable;
 
@@ -25,6 +27,7 @@ public class IconHandler {
     private Resources res;
     private Class<drawable> classR;
     private Map<String, Integer> idCache = new HashMap<String, Integer>();
+    private Map<String, Drawable> socketFrames = new HashMap<String, Drawable>();
     static final int WHITE =     0xFFFFFFFF;
     static final int POOR =      0xFF9D9D9D;
     static final int COMMON =    0xFFFFFFFF;
@@ -49,6 +52,10 @@ public class IconHandler {
         mask.setAlpha(255);
         porter_DST_ATOP = new PorterDuffXfermode(Mode.DST_ATOP);
         porter_SRC_IN = new PorterDuffXfermode(Mode.SRC_IN);
+        socketFrames.put("RED", res.getDrawable(R.drawable.sc_sockets_red));
+        socketFrames.put("YELLOW", res.getDrawable(R.drawable.sc_sockets_yellow));
+        socketFrames.put("BLUE", res.getDrawable(R.drawable.sc_sockets_blue));
+        socketFrames.put("META", res.getDrawable(R.drawable.sc_sockets_meta));
     }
 
     public Bitmap getItemIcon(int id, int quality) {
@@ -59,6 +66,21 @@ public class IconHandler {
 
     public Bitmap getItemIcon(String name, int quality) {
         return getItemIcon(getIconId(name), quality);
+    }
+
+    public Drawable getGemIcon(int id, String socket) {
+        Drawable frame = socketFrames.get(socket);
+        if (frame == null)
+            frame = socketFrames.get("META");
+
+        Drawable[] layers = new Drawable[2];
+        layers[0] = res.getDrawable(id);
+        layers[1] = frame;
+        return new LayerDrawable(layers);
+    }
+
+    public Drawable getGemIcon(String name, String socket) {
+        return getGemIcon(getIconId(name), socket);
     }
 
     public Bitmap getTalentIcon(int id) {
@@ -92,7 +114,6 @@ public class IconHandler {
             // TODO return the question mark icon id.
             return 0;
         }
-
     }
 
     public Bitmap roundCorners(Bitmap bitmap, int r) {
