@@ -36,7 +36,7 @@ public class CharHandler extends Activity{
     private JSONObject items;  // These are not final
     private Map<String, HashMap<String, Object>> itemCache;  // Info from the DB
     private Map<Integer, HashMap<String, Object>> gemCache;  // Info from the DB
-    private Map<Integer, List<Stat>> enchantStatsCache;      // Info from the DB
+    private Map<Integer, HashMap<String, Object>> enchCache;  // Info from the DB
     private Map<String, HashMap<String, Object>> charItems;  // Info from the snapshots (or bnet import)
     private DamageCalculator calculator;
     private DataBaseHelper dbHandler = getDbHandler();
@@ -314,7 +314,7 @@ public class CharHandler extends Activity{
     public void setItemsFromJSON(JSONObject json) throws JSONException {
         itemCache = new HashMap<String, HashMap<String, Object>>();
         gemCache = new HashMap<Integer, HashMap<String, Object>>();
-        enchantStatsCache = new HashMap<Integer, List<Stat>>();
+        enchCache = new HashMap<Integer, HashMap<String, Object>>();
         charItems = new HashMap<String, HashMap<String, Object>>();
 
         JSONObject items = json.getJSONObject("items");
@@ -345,8 +345,8 @@ public class CharHandler extends Activity{
                     int paramId = params.getInt(param);
                     item.put(param, paramId);
                     if (param.equals("enchant") &&
-                            !enchantStatsCache.containsKey(paramId)) {
-                        enchantStatsCache.put(paramId, dbHandler.getEnchantStats(paramId));
+                            !enchCache.containsKey(paramId)) {
+                        enchCache.put(paramId, dbHandler.getEnchant(paramId));
                     }
                 }
                 catch (JSONException ignore) {}
@@ -373,7 +373,7 @@ public class CharHandler extends Activity{
         Log.v("ShadowCraft", charItems.toString());
         Log.v("ShadowCraft", itemCache.toString());
         Log.v("ShadowCraft", gemCache.toString());
-        Log.v("ShadowCraft", enchantStatsCache.toString());
+        Log.v("ShadowCraft", enchCache.toString());
         Log.v("ShadwoCraft", Arrays.asList(sumStats()).toString());
     }
 
@@ -575,8 +575,9 @@ public class CharHandler extends Activity{
             }
 
             Integer enchantId = (Integer) itemEquiped.get("enchant");
-            if (enchantId != null && enchantStatsCache.containsKey(enchantId)) {
-                for (Stat stat : enchantStatsCache.get(enchantId)) {
+            if (enchantId != null && enchCache.containsKey(enchantId)) {
+                HashMap<String, Object> enchant = enchCache.get(enchantId);
+                for (Stat stat : (List<Stat>)enchant.get("stats")) {
                     sumStats[stat.getId()] += stat.getValue();
                 }
             }
@@ -769,6 +770,21 @@ public class CharHandler extends Activity{
         }
         return 0;
     }
+
+    public Map<String, HashMap<String, Object>> itemCache() {
+        return itemCache;
+    }
+
+    public Map<String, HashMap<String, Object>> charItems() {
+        return charItems;
+    }
+
+    public Map<Integer, HashMap<String, Object>> gemCache() {
+        return gemCache;
+    }
+
+
+
 
     public Integer[] itemIDs() {
         JSONObject items = this.items;

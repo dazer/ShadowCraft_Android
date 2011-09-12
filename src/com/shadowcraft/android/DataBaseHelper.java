@@ -200,6 +200,13 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         return itemMap;
     }
 
+    public HashMap<String, Object> getEnchant(long id) {
+        HashMap<String, Object> itemMap = new HashMap<String, Object>();
+        itemMap.put("name", "");  //TODO
+        itemMap.put("stats", getEnchantStats(id));
+        return itemMap;
+    }
+
     public List<Stat> getEnchantStats(long id, String searchFlag) {
         String field = null;
         if (searchFlag.equals("GEM"))
