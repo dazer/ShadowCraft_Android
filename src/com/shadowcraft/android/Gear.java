@@ -24,6 +24,6 @@ public class Gear extends Activity {
         gearLayout = (LinearLayout) findViewById(R.id.llGear);
         View headItem = gearLayout.getChildAt(0);
         ImageView icon = (ImageView) headItem.findViewById(R.id.ivItemIcon);
-        icon.setImageBitmap(icons.getItemIcon(R.drawable.ability_backstab, icons.COLORS[4]));
+        icon.setImageBitmap(icons.getItemIcon("ability_backstab", 4));
     }
 }

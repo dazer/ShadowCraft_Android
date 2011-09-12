@@ -1,6 +1,8 @@
 package com.shadowcraft.android;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,12 +15,16 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.shadowcraft.android.R.drawable;
+
 
 public class IconHandler {
 
-    private Paint mask = null;
-    private PorterDuffXfermode porter_SRC_IN, porter_DST_ATOP = null;
+    private Paint mask;
+    private PorterDuffXfermode porter_SRC_IN, porter_DST_ATOP;
     private Resources res;
+    private Class<drawable> classR;
+    private Map<String, Integer> idCache = new HashMap<String, Integer>();
     static final int WHITE =     0xFFFFFFFF;
     static final int POOR =      0xFF9D9D9D;
     static final int COMMON =    0xFFFFFFFF;
@@ -37,6 +43,7 @@ public class IconHandler {
      */
     public IconHandler(Resources res) {
         this.res = res;
+        classR = R.drawable.class;
         mask = new Paint(Paint.ANTI_ALIAS_FLAG);
         mask.setColor(WHITE);
         mask.setAlpha(255);
@@ -47,7 +54,11 @@ public class IconHandler {
     public Bitmap getItemIcon(int id, int quality) {
         int r = 4;              // round edge
         float w = 3;
-        return getIconWithBasicFrame(id, r, quality, w);
+        return getIconWithBasicFrame(id, r, COLORS[quality], w);
+    }
+
+    public Bitmap getItemIcon(String name, int quality) {
+        return getItemIcon(getIconId(name), quality);
     }
 
     public Bitmap getTalentIcon(int id) {
@@ -58,6 +69,30 @@ public class IconHandler {
     public Bitmap fetchBitmap(int id) {
         InputStream is = res.openRawResource(id);
         return BitmapFactory.decodeStream(is);
+    }
+
+    /**
+     * This attempts to find the id tied to a resource in the R class
+     * @param name The String holding the name of the resource
+     * @return The resource id, or the id of the question mark if non is found.
+     */
+    public int getIconId(String name) {
+        if (idCache.containsKey(name)) {
+            return idCache.get(name);
+        }
+        // apparently reflection is faster than getIdentifier().
+        //return res.getIdentifier(name, "drawable", "com.shadowcraft.android");
+        try {
+            java.lang.reflect.Field field = classR.getField(name);
+            int id = field.getInt(null);
+            idCache.put(name, id);
+            return id;
+        }
+        catch (Exception e) {
+            // TODO return the question mark icon id.
+            return 0;
+        }
+
     }
 
     public Bitmap roundCorners(Bitmap bitmap, int r) {
