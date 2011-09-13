@@ -204,6 +204,14 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         HashMap<String, Object> itemMap = new HashMap<String, Object>();
         itemMap.put("name", "");  //TODO
         itemMap.put("stats", getEnchantStats(id));
+        String[] columns = new String[] {"_id", "name"};
+        Cursor c = simpleQuery("enchants", columns, "_id=" + id);
+        if (c != null) {
+            // TODO do this in a single query.
+            c.moveToFirst();
+            itemMap.put("name", c.getString(1));
+        }
+        c.close();
         return itemMap;
     }
 

@@ -783,8 +783,9 @@ public class CharHandler extends Activity{
         return gemCache;
     }
 
-
-
+    public Map<Integer, HashMap<String, Object>> enchCache() {
+        return enchCache;
+    }
 
     public Integer[] itemIDs() {
         JSONObject items = this.items;

@@ -48,7 +48,9 @@ public class Gear extends Activity {
     private void initItem(View v, String slot) {
         HashMap<String, Object> itemData = charHandler.itemCache().get(slot);
         HashMap<String, Object> charData = charHandler.charItems().get(slot);
+        //TODO cache these two fields? they might change during runtime.
         Map<Integer, HashMap<String, Object>> gemsData = charHandler.gemCache();
+        Map<Integer, HashMap<String, Object>> enchData = charHandler.enchCache();
         int[] sockets = new int[] {R.id.ivGem0, R.id.ivGem1, R.id.ivGem2};
 
         ImageView icon = (ImageView) v.findViewById(R.id.ivItemIcon);
@@ -70,9 +72,13 @@ public class Gear extends Activity {
         tv1.setTextColor(icons.COLORS[(Integer)itemData.get("quality")]);
         tv1.setText((String)itemData.get("name"));
         TextView tv2 = (TextView) v.findViewById(R.id.textView2);
-        tv2.setTextColor(icons.COLORS[2]);
         tv2.setTextSize(8);
-        tv2.setText("Enchant of the Item");
+        tv2.setTextColor(icons.COLORS[2]);
+        Integer ench = (Integer) charData.get("enchant");
+        if (ench == null)
+            tv2.setVisibility(View.INVISIBLE);
+        else  // this should never return null.
+            tv2.setText((String)enchData.get(ench).get("name"));
         TextView tv3 = (TextView) v.findViewById(R.id.textView3);
         tv3.setText(((Integer)itemData.get("itemLevel")).toString());
     }
