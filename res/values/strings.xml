@@ -13,4 +13,5 @@
     <string name="start_start_button">Start</string>
     <color name="bg_color">#0a0a0a</color>
     <color name="icon_frame">#FFFFFF</color>
+    <color name="enchant">#1eff00</color>
 </resources>

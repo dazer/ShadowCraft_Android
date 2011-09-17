@@ -56,6 +56,7 @@ public class IconHandler {
         socketFrames.put("YELLOW", res.getDrawable(R.drawable.sc_sockets_yellow));
         socketFrames.put("BLUE", res.getDrawable(R.drawable.sc_sockets_blue));
         socketFrames.put("META", res.getDrawable(R.drawable.sc_sockets_meta));
+        socketFrames.put("PRISMATIC", res.getDrawable(R.drawable.sc_sockets_prismatic));
     }
 
     public Bitmap getItemIcon(int id, int quality) {
